@@ -6,22 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('ulasans_tabel', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('ulasans')) {
+            Schema::create('ulasans', function (Blueprint $table) {
+                $table->id();
+                $table->string('nama_rumah_makan');
+                $table->string('nama_pengulas');
+                $table->integer('rating');
+                $table->text('komentar')->nullable(); // Sesuai validasi di controller
+                $table->timestamps(); // created_at dan updated_at
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('ulasans_tabel');
+        Schema::dropIfExists('ulasans');
     }
 };
