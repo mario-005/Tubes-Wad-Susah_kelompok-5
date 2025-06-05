@@ -11,17 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('operational_statuses_tabel', function (Blueprint $table) {
+        Schema::create('operational_statuses', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
+            $table->time('open_time')->nullable();
+            $table->time('close_time')->nullable();
+            $table->enum('status', ['open', 'closed'])->default('closed');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('operational_statuses_tabel');
+        Schema::dropIfExists('operational_statuses');
     }
 };
