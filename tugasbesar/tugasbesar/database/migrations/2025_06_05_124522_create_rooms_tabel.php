@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rooms_tabel', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('capacity')->default(0);
+            $table->enum('status', ['tersedia', 'dipesan', 'maintenance'])->default('tersedia');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rooms_tabel');
+        Schema::dropIfExists('rooms');
     }
 };
