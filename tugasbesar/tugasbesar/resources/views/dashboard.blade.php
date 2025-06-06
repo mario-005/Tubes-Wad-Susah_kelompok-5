@@ -15,12 +15,35 @@
 
 <div class="container">
     @if(auth()->user()->role === 'admin')
-    <div class="header-actions">
-        <a href="{{ route('rumah-makan.create') }}" class="btn-add">
-            <i class="fas fa-plus"></i> Tambah Restoran
-        </a>
+    <div class="admin-dashboard-section">
+        <div class="section-header">
+            <h2>Admin Dashboard</h2>
+            <p>Manage your restaurants and keep your information up to date</p>
+        </div>
+        <div class="admin-actions-panel">
+            <a href="{{ route('rumah-makan.create') }}" class="admin-action-card">
+                <i class="fas fa-plus-circle action-icon"></i>
+                <div class="action-content">
+                    <h3>Tambah Restoran</h3>
+                    <p>Tambahkan restoran baru ke dalam sistem</p>
+                </div>
+            </a>
+            <a href="{{ route('menus.create') }}" class="admin-action-card">
+                <i class="fas fa-utensils action-icon"></i>
+                <div class="action-content">
+                    <h3>Tambah Menu</h3>
+                    <p>Tambahkan menu baru untuk restoran</p>
+                </div>
+            </a>
+            <!-- You can add more admin action cards here in the future -->
+        </div>
     </div>
     @endif
+
+    <div class="section-header">
+        <h2>Daftar Restoran</h2>
+        <p>Temukan restoran terbaik di sekitar kampus</p>
+    </div>
 
     <div class="restaurant-grid">
         @foreach($rumahMakans ?? [] as $rm)
@@ -218,6 +241,74 @@
 
     .btn:hover {
         transform: translateY(-2px);
+    }
+
+    .admin-dashboard-section {
+        background-color: #f8f9fa;
+        border-radius: 16px;
+        padding: 30px;
+        margin: 40px 0;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .section-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .admin-actions-panel {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .admin-action-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .admin-action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .action-icon {
+        font-size: 2.5rem;
+        color: #e42313;
+    }
+
+    .action-content h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .action-content p {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0;
     }
 </style>
 @endsection

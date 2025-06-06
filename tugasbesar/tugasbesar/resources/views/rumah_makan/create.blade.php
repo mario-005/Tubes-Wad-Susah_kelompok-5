@@ -1,23 +1,44 @@
-@extends('rumah_makan.layout')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Restaurant - Telkom Foodies</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #fff;
+            padding-top: 2rem;
         }
 
         .container {
-            max-width: 1600;
+            max-width: 800px;
             margin: 10px auto;
             background-color: #f9fbff;
             padding: 40px;
             border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            color: #e42313;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            display: block;
         }
 
         h2 {
             text-align: center;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 600;
             color: #0f172a;
             margin-bottom: 6px;
@@ -101,6 +122,7 @@
             border-radius: 12px;
             border: none;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .btn-cancel {
@@ -109,12 +131,12 @@
         }
 
         .btn-submit {
-            background-color: #6366f1;
+            background-color: #e42313;
             color: white;
         }
 
         .btn-submit:hover {
-            background-color: #4f46e5;
+            background-color: #b91c1c;
         }
 
         .note {
@@ -122,9 +144,30 @@
             font-size: 12px;
             color: #94a3b8;
         }
-    </style>
 
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
     <div class="container">
+        <div class="header">
+            <a href="{{ route('dashboard') }}" class="logo">Telkom Foodies</a>
+            <a href="{{ url()->previous() }}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+
         <h2>Form Tambah Restaurant</h2>
         <p class="description">Lengkapi Form Berikut untuk Menambahkan Restaurant Baru</p>
 
@@ -168,9 +211,6 @@
                 </div>
             </div>
 
-            
-
-
             <div class="actions">
                 <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
                 <button type="submit" class="btn-submit">Tambah</button>
@@ -186,4 +226,5 @@
             }
         }
     </script>
-@endsection
+</body>
+</html>

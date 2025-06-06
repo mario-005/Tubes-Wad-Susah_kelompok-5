@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Telkom Theme -->
+    <link href="{{ asset('css/telkom-theme.css') }}" rel="stylesheet">
     <style>
         .transparent-header {
             background-color: rgba(255, 255, 255, 0.9);
@@ -24,23 +26,23 @@
         .site-logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #e44d26;
+            color: #e42313;
             text-decoration: none;
             transition: color 0.3s ease;
         }
         
         .site-logo:hover {
-            color: #c73e1d;
+            color: #b91c1c;
         }
         
         .logout-btn {
-            color: #6c757d;
+            color: #6b7280;
             text-decoration: none;
             transition: color 0.3s ease;
         }
         
         .logout-btn:hover {
-            color: #343a40;
+            color: #4b5563;
         }
         
         .main-content {

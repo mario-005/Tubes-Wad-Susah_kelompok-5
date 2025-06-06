@@ -1,0 +1,75 @@
+/* Telkom Theme Colors */
+:root {
+    --telkom-red: #e42313;
+    --telkom-red-dark: #b91c1c;
+    --telkom-red-light: #ef4444;
+    --telkom-gray: #6b7280;
+    --telkom-gray-dark: #4b5563;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--telkom-red) !important;
+    border-color: var(--telkom-red) !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--telkom-red-dark) !important;
+    border-color: var(--telkom-red-dark) !important;
+}
+
+.btn-secondary {
+    background-color: var(--telkom-gray) !important;
+    border-color: var(--telkom-gray) !important;
+    color: white !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--telkom-gray-dark) !important;
+    border-color: var(--telkom-gray-dark) !important;
+}
+
+.btn-warning {
+    background-color: var(--telkom-red-light) !important;
+    border-color: var(--telkom-red-light) !important;
+    color: white !important;
+}
+
+.btn-warning:hover {
+    background-color: var(--telkom-red) !important;
+    border-color: var(--telkom-red) !important;
+}
+
+.btn-danger {
+    background-color: var(--telkom-red) !important;
+    border-color: var(--telkom-red) !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background-color: var(--telkom-red-dark) !important;
+    border-color: var(--telkom-red-dark) !important;
+}
+
+/* Form Submit Buttons */
+button[type="submit"] {
+    background-color: var(--telkom-red) !important;
+    border-color: var(--telkom-red) !important;
+    color: white !important;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--telkom-red-dark) !important;
+    border-color: var(--telkom-red-dark) !important;
+}
+
+/* Links with btn class */
+a.btn {
+    text-decoration: none;
+}
+
+/* Focus states */
+.btn:focus, button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(228, 35, 19, 0.25) !important;
+} 

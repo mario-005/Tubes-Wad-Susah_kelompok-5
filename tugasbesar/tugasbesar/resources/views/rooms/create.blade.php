@@ -1,34 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Tambah Ruangan Baru</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Ruangan - {{ $rumahMakan->nama }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 2rem 0;
         }
 
         .container {
-            width: 100%;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .card {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             padding: 30px;
             position: relative;
             overflow: hidden;
@@ -41,57 +35,83 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: #4CAF50;
+            background: #e42313;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            color: #e42313;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            color: #374151;
         }
 
         h1 {
-            color: #333;
-            font-size: 2em;
+            color: #1f2937;
+            font-size: 24px;
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .subtitle {
-            color: #666;
-            font-size: 1.1em;
+            color: #6b7280;
+            font-size: 1rem;
             margin-bottom: 30px;
         }
 
         .restaurant-info {
-            background-color: #e9ecef;
+            background-color: #f9fafb;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
         }
 
         .restaurant-info h3 {
             margin: 0;
-            color: #495057;
-            font-size: 1.2rem;
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
         .restaurant-info p {
             margin: 5px 0 0;
-            color: #6c757d;
+            color: #6b7280;
+            font-size: 0.9rem;
         }
 
         .error { 
-            color: #dc3545;
-            background-color: #f8d7da;
+            color: #dc2626;
+            background-color: #fee2e2;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 12px;
             margin-bottom: 20px;
         }
 
         .success {
-            color: #28a745;
-            background-color: #d4edda;
+            color: #059669;
+            background-color: #d1fae5;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 12px;
             margin-bottom: 20px;
         }
 
@@ -102,79 +122,84 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: #374151;
             font-weight: 500;
+            font-size: 14px;
         }
 
         input, select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e1e1;
-            border-radius: 5px;
-            font-size: 1em;
+            padding: 10px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
             transition: all 0.3s ease;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            border-color: #e42313;
+            box-shadow: 0 0 0 3px rgba(228, 35, 19, 0.1);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
         }
 
         .error-message {
-            color: #dc3545;
+            color: #dc2626;
             font-size: 0.9em;
             margin-top: 5px;
         }
 
         .button-group {
             display: flex;
+            justify-content: flex-end;
             gap: 10px;
             margin-top: 30px;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 10px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 1em;
+            font-size: 14px;
             transition: all 0.3s ease;
-            flex: 1;
-            text-align: center;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .btn-primary {
-            background-color: #4CAF50;
+        .btn-submit {
+            background-color: #e42313;
             color: white;
         }
 
-        .btn-secondary {
-            background-color: #6c757d;
+        .btn-submit:hover {
+            background-color: #b91c1c;
             color: white;
         }
 
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
+        .btn-back {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-back:hover {
+            background-color: #e5e7eb;
+            color: #1f2937;
         }
 
         select option {
             padding: 12px;
-        }
-
-        select option[value="tersedia"] {
-            color: #28a745;
-        }
-
-        select option[value="dipesan"] {
-            color: #ffc107;
-        }
-
-        select option[value="maintenance"] {
-            color: #dc3545;
         }
 
         @media (max-width: 768px) {
@@ -196,73 +221,69 @@
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1>Tambah Ruangan Baru</h1>
-                <p class="subtitle">Isi formulir di bawah untuk menambahkan ruangan baru</p>
+                <a href="{{ route('dashboard') }}" class="logo">Telkom Foodies</a>
+                <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
             </div>
+
+            <h1>Tambah Ruangan Baru</h1>
+            <p class="subtitle">Isi formulir di bawah untuk menambahkan ruangan baru</p>
 
             <div class="restaurant-info">
                 <h3>{{ $rumahMakan->nama }}</h3>
                 <p>{{ $rumahMakan->alamat }}</p>
             </div>
 
-            @if(session('error'))
-                <div class="error">{{ session('error') }}</div>
-            @endif
-
-            @if(session('success'))
-                <div class="success">{{ session('success') }}</div>
+            @if($errors->any())
+                <div class="error">
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
 
             <form action="{{ route('rooms.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="rumah_makan_id" value="{{ $rumahMakan->id }}">
-                
+
                 <div class="form-group">
-                    <label>Nama Ruangan</label>
-                    <input type="text" 
-                           name="name" 
-                           value="{{ old('name') }}" 
-                           placeholder="Masukkan nama ruangan"
-                           required>
+                    <label for="name">Nama Ruangan</label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required>
                     @error('name')
-                        <div class="error-message">{{ $message }}</div>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label>Kapasitas Ruangan</label>
-                    <input type="number" 
-                           name="capacity" 
-                           value="{{ old('capacity') }}" 
-                           placeholder="Masukkan kapasitas ruangan (orang)"
-                           min="1"
-                           required>
+                    <label for="capacity">Kapasitas</label>
+                    <input type="number" id="capacity" name="capacity" value="{{ old('capacity') }}" required>
                     @error('capacity')
-                        <div class="error-message">{{ $message }}</div>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label>Status Ruangan</label>
-                    <select name="status" required>
-                        <option value="tersedia" {{ old('status') == 'tersedia' ? 'selected' : '' }}>
-                            Tersedia
-                        </option>
-                        <option value="dipesan" {{ old('status') == 'dipesan' ? 'selected' : '' }}>
-                            Dipesan
-                        </option>
-                        <option value="maintenance" {{ old('status') == 'maintenance' ? 'selected' : '' }}>
-                            Maintenance
-                        </option>
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="tersedia">Tersedia</option>
+                        <option value="dipesan">Dipesan</option>
+                        <option value="maintenance">Maintenance</option>
                     </select>
                     @error('status')
-                        <div class="error-message">{{ $message }}</div>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="button-group">
-                    <button type="submit" class="btn btn-primary">Tambah Ruangan</button>
-                    <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="btn btn-back">
+                        <i class="fas fa-times"></i> Batal
+                    </a>
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-save"></i> Simpan Ruangan
+                    </button>
                 </div>
             </form>
         </div>

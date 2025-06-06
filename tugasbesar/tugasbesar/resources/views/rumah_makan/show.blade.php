@@ -1,4 +1,6 @@
-@extends('rumah_makan.layout')
+@extends('layouts.app')
+
+@section('title', $rumahMakan->nama)
 
 @section('content')
 <div class="container">

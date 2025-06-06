@@ -1,4 +1,6 @@
-@extends('rumah_makan.layout')
+@extends('layouts.app')
+
+@section('title', 'Edit Restaurant')
 
 @section('content')
     <style>
@@ -109,7 +111,7 @@
         }
 
         .btn-submit {
-            background-color: #6366f1;
+            background-color: #e42313;
             color: white;
         }
 

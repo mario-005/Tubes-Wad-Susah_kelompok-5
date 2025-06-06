@@ -1,67 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Tambah Reservasi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Reservasi - {{ $rumahMakan->nama }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 2rem 0;
         }
 
         .container {
-            width: 100%;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .card {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             padding: 30px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            color: #e42313;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            color: #374151;
         }
 
         h1 {
-            color: #333;
-            font-size: 2em;
+            color: #1f2937;
+            font-size: 24px;
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .subtitle {
-            color: #6c757d;
-            font-size: 1em;
+            color: #6b7280;
+            font-size: 1rem;
             margin-bottom: 20px;
         }
 
+        .restaurant-info {
+            background-color: #f9fafb;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .restaurant-info h3 {
+            margin: 0;
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .restaurant-info p {
+            margin: 5px 0 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
         .error { 
-            color: #dc3545;
-            background-color: #f8d7da;
+            color: #dc2626;
+            background-color: #fee2e2;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 12px;
             margin-bottom: 20px;
         }
 
         .success {
-            color: #28a745;
-            background-color: #d4edda;
+            color: #059669;
+            background-color: #d1fae5;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 12px;
             margin-bottom: 20px;
         }
 
@@ -82,62 +120,80 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: #374151;
             font-weight: 500;
+            font-size: 14px;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e1e1;
-            border-radius: 5px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
+            padding: 10px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #4CAF50;
+            border-color: #e42313;
+            box-shadow: 0 0 0 3px rgba(228, 35, 19, 0.1);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
         }
 
         .error-message {
-            color: #dc3545;
+            color: #dc2626;
             font-size: 0.9em;
             margin-top: 5px;
         }
 
         .button-group {
             display: flex;
+            justify-content: flex-end;
             gap: 10px;
             margin-top: 30px;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 10px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 1em;
+            font-size: 14px;
             transition: all 0.3s ease;
-            flex: 1;
-            text-align: center;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .btn-primary {
-            background-color: #4CAF50;
+        .btn-submit {
+            background-color: #e42313;
             color: white;
         }
 
-        .btn-secondary {
-            background-color: #6c757d;
+        .btn-submit:hover {
+            background-color: #b91c1c;
             color: white;
         }
 
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
+        .btn-back {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-back:hover {
+            background-color: #e5e7eb;
+            color: #1f2937;
         }
 
         .room-option {
@@ -146,15 +202,15 @@
         }
 
         .room-option.tersedia {
-            color: #28a745;
+            color: #059669;
         }
 
         .room-option.dipesan {
-            color: #ffc107;
+            color: #eab308;
         }
 
         .room-option.maintenance {
-            color: #dc3545;
+            color: #dc2626;
         }
 
         @media (max-width: 768px) {
@@ -176,104 +232,107 @@
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1>Buat Reservasi Ruangan</h1>
-                <p class="subtitle">Silakan isi formulir di bawah untuk memesan ruangan</p>
+                <a href="{{ route('dashboard') }}" class="logo">Telkom Foodies</a>
+                <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
             </div>
 
-            @if(session('error'))
-                <div class="error">{{ session('error') }}</div>
-            @endif
+            <h1>Buat Reservasi Ruangan</h1>
+            <p class="subtitle">Silakan isi formulir di bawah untuk memesan ruangan</p>
 
-            @if(session('success'))
-                <div class="success">{{ session('success') }}</div>
+            <div class="restaurant-info">
+                <h3>{{ $rumahMakan->nama }}</h3>
+                <p>{{ $rumahMakan->alamat }}</p>
+            </div>
+
+            @if($errors->any())
+                <div class="error">
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
 
             <form action="{{ route('reservations.store') }}" method="POST">
                 @csrf
-                
+                <input type="hidden" name="rumah_makan_id" value="{{ $rumahMakan->id }}">
+
                 <div class="form-group">
-                    <label>Nama Pemesan</label>
-                    <input type="text" 
-                           name="guest_name" 
-                           value="{{ old('guest_name') }}" 
-                           placeholder="Masukkan nama Anda"
-                           required>
+                    <label for="guest_name">Nama Pemesan</label>
+                    <input type="text" id="guest_name" name="guest_name" value="{{ old('guest_name') }}" required>
                     @error('guest_name')
-                        <div class="error-message">{{ $message }}</div>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label>Pilih Ruangan</label>
-                    <select name="room_id" required>
-                        <option value="">Pilih ruangan yang tersedia</option>
+                    <label for="room_id">Pilih Ruangan</label>
+                    <select id="room_id" name="room_id" required>
                         @foreach($rooms as $room)
-                            <option value="{{ $room->id }}" 
-                                    {{ old('room_id') == $room->id ? 'selected' : '' }}
-                                    {{ $room->status !== 'tersedia' ? 'disabled' : '' }}>
-                                {{ $room->name }} 
-                                @if($room->status !== 'tersedia')
-                                    ({{ ucfirst($room->status) }})
-                                @else
-                                    (Kapasitas: {{ $room->capacity }} orang)
-                                @endif
+                            <option value="{{ $room->id }}" class="room-option {{ $room->status }}">
+                                {{ $room->name }} (Kapasitas: {{ $room->capacity }} orang)
                             </option>
                         @endforeach
                     </select>
                     @error('room_id')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label>Tanggal Reservasi</label>
-                    <input type="date" 
-                           name="reservation_date" 
-                           value="{{ old('reservation_date') }}" 
-                           min="{{ date('Y-m-d') }}"
-                           required>
-                    @error('reservation_date')
-                        <div class="error-message">{{ $message }}</div>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="form-row">
                     <div class="form-group half">
-                        <label>Waktu Mulai</label>
-                        <input type="time" 
-                               name="start_time" 
-                               value="{{ old('start_time') }}" 
-                               required>
-                        @error('start_time')
-                            <div class="error-message">{{ $message }}</div>
+                        <label for="reservation_date">Tanggal Reservasi</label>
+                        <input type="date" id="reservation_date" name="reservation_date" value="{{ old('reservation_date') }}" required>
+                        @error('reservation_date')
+                            <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <div class="form-group half">
-                        <label>Waktu Selesai</label>
-                        <input type="time" 
-                               name="end_time" 
-                               value="{{ old('end_time') }}" 
-                               required>
+                        <label for="guest_count">Jumlah Tamu</label>
+                        <input type="number" id="guest_count" name="guest_count" value="{{ old('guest_count') }}" min="1" required>
+                        @error('guest_count')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="start_time">Jam Mulai</label>
+                        <input type="time" id="start_time" name="start_time" value="{{ old('start_time') }}" required>
+                        @error('start_time')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="end_time">Jam Selesai</label>
+                        <input type="time" id="end_time" name="end_time" value="{{ old('end_time') }}" required>
                         @error('end_time')
-                            <div class="error-message">{{ $message }}</div>
+                            <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Keperluan</label>
-                    <textarea name="purpose" 
-                              placeholder="Jelaskan keperluan penggunaan ruangan"
-                              required>{{ old('purpose') }}</textarea>
-                    @error('purpose')
-                        <div class="error-message">{{ $message }}</div>
+                    <label for="notes">Catatan Tambahan</label>
+                    <textarea id="notes" name="notes" rows="3">{{ old('notes') }}</textarea>
+                    @error('notes')
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="button-group">
-                    <button type="submit" class="btn btn-primary">Buat Reservasi</button>
-                    <a href="{{ route('menus.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="btn btn-back">
+                        <i class="fas fa-times"></i> Batal
+                    </a>
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-save"></i> Buat Reservasi
+                    </button>
                 </div>
             </form>
         </div>
