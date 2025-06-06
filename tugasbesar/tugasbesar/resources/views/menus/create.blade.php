@@ -35,6 +35,24 @@
                 text-align: center;
             }
 
+            .restaurant-info {
+                background-color: #e9ecef;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+
+            .restaurant-info h3 {
+                margin: 0;
+                color: #495057;
+                font-size: 1.2rem;
+            }
+
+            .restaurant-info p {
+                margin: 5px 0 0;
+                color: #6c757d;
+            }
+
             .form-group {
                 margin-bottom: 15px;
             }
@@ -67,7 +85,7 @@
             }
 
             button[type="submit"] {
-                background-color:rgb(0, 13, 255);
+                background-color: #007bff;
                 color: white;
                 padding: 12px 20px;
                 border-radius: 5px;
@@ -75,7 +93,10 @@
                 display: inline-block;
                 width: auto;  
                 text-align: center;
-                margin-top: 10px; 
+                margin-top: 10px;
+                border: none;
+                cursor: pointer;
+                font-size: 16px;
             }
 
             button[type="submit"]:hover {
@@ -89,52 +110,69 @@
                 border-radius: 5px;
                 text-decoration: none;
                 display: inline-block;
-                width: auto;  /* Automatically adjusts width based on content */
+                width: auto;
                 text-align: center;
-                margin-top: 10px;  /* Add some space between the buttons */
+                margin-top: 10px;
+                margin-left: 10px;
             }
 
             .btn-back:hover {
                 background-color: #5a6268;
             }
+
+            .button-group {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin-top: 20px;
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Create Menu</h1>
+            <h1>Tambah Menu Baru</h1>
+
+            <div class="restaurant-info">
+                <h3>{{ $rumahMakan->nama }}</h3>
+                <p>{{ $rumahMakan->alamat }}</p>
+            </div>
 
             <form action="{{ route('menus.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="rumah_makan_id" value="{{ $rumahMakan->id }}">
+
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Nama Menu</label>
                     <input type="text" name="name" id="name" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="price">Price</label>
+                    <label for="price">Harga</label>
                     <input type="number" name="price" id="price" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="image">Image</label>
+                    <label for="image">Foto Menu</label>
                     <input type="file" name="image" id="image" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description">Deskripsi</label>
                     <textarea name="description" id="description" class="form-control" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="status">Status</label>
                     <select name="status" id="status" class="form-control" required>
-                        <option value="available">Available</option>
-                        <option value="out_of_stock">Out of Stock</option>
+                        <option value="available">Tersedia</option>
+                        <option value="out_of_stock">Habis</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Save</button>
-                <a href="{{ route('dashboard') }}" class="btn-back">Back to Dashboard</a>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Simpan Menu</button>
+                    <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="btn-back">Kembali</a>
+                </div>
             </form>
         </div>
     </body>

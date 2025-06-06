@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\RumahMakan;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -24,181 +25,92 @@ class ReservationController extends Controller
         }
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        try {
-            $rooms = Room::where('status', 'tersedia')->get();
-            return view('reservations.create', compact('rooms'));
-        } catch (\Exception $e) {
-            Log::error('Error loading create form:', [
-                'message' => $e->getMessage()
-            ]);
-            return back()->with('error', 'Gagal memuat form tambah reservasi');
-        }
+        $rumahMakanId = $request->query('rumah_makan_id');
+        $rumahMakan = RumahMakan::with('rooms')->findOrFail($rumahMakanId);
+        $rooms = $rumahMakan->rooms;
+        return view('reservations.create', compact('rumahMakan', 'rooms'));
     }
 
     public function store(Request $request)
     {
-        try {
-            Log::info('Reservation request data:', $request->all());
+        $validated = $request->validate([
+            'room_id' => 'required|exists:rooms,id',
+            'guest_name' => 'required|string|max:255',
+            'reservation_date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'purpose' => 'required|string'
+        ]);
 
-            $validated = $request->validate([
-                'guest_name' => 'required|string|max:255',
-                'room_id' => 'required|exists:rooms,id',
-                'reservation_date' => 'required|date|after_or_equal:today',
-                'start_time' => 'required|date_format:H:i',
-                'end_time' => 'required|date_format:H:i|after:start_time',
-                'purpose' => 'required|string'
-            ]);
-
-            // Check if the room is available
-            $room = Room::find($validated['room_id']);
-            if ($room->status !== 'tersedia') {
-                return back()
-                    ->withInput()
-                    ->with('error', 'Ruangan yang dipilih tidak tersedia');
-            }
-
-            // Check for conflicting reservations
-            $conflictingReservation = Reservation::where('room_id', $validated['room_id'])
-                ->where('reservation_date', $validated['reservation_date'])
-                ->where(function ($query) use ($validated) {
-                    $query->where(function ($q) use ($validated) {
-                        $q->where('start_time', '<=', $validated['end_time'])
-                          ->where('end_time', '>=', $validated['start_time']);
-                    });
-                })
-                ->first();
-
-            if ($conflictingReservation) {
-                return back()
-                    ->withInput()
-                    ->with('error', 'Ruangan sudah direservasi untuk waktu tersebut');
-            }
-
-            // Create the reservation
-            $reservation = Reservation::create($validated);
-            Log::info('Reservation created:', ['id' => $reservation->id]);
-
-            // Update room status
-            $room->update(['status' => 'dipesan']);
-            Log::info('Room status updated:', ['id' => $room->id]);
-
-            return redirect()
-                ->route('reservations.index')
-                ->with('success', 'Reservasi berhasil dibuat');
-
-        } catch (\Exception $e) {
-            Log::error('Error creating reservation:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return back()
-                ->withInput()
-                ->with('error', 'Gagal membuat reservasi: ' . $e->getMessage());
+        // Check if room is available
+        $room = Room::findOrFail($request->room_id);
+        if ($room->status !== 'tersedia') {
+            return back()->withInput()->with('error', 'Ruangan tidak tersedia untuk saat ini');
         }
+
+        // Check for conflicting reservations
+        $conflicting = Reservation::where('room_id', $request->room_id)
+            ->where('reservation_date', $request->reservation_date)
+            ->where(function($query) use ($request) {
+                $query->whereBetween('start_time', [$request->start_time, $request->end_time])
+                    ->orWhereBetween('end_time', [$request->start_time, $request->end_time]);
+            })
+            ->exists();
+
+        if ($conflicting) {
+            return back()->withInput()->with('error', 'Waktu reservasi bertabrakan dengan reservasi lain');
+        }
+
+        $validated['status'] = 'pending';
+        Reservation::create($validated);
+
+        return redirect()->route('rumah-makan.show', $room->rumah_makan_id)
+            ->with('success', 'Reservasi berhasil dibuat');
     }
 
     public function edit(Reservation $reservation)
     {
-        try {
-            $rooms = Room::all();
-            return view('reservations.edit', compact('reservation', 'rooms'));
-        } catch (\Exception $e) {
-            Log::error('Error loading reservation edit form:', [
-                'reservation_id' => $reservation->id,
-                'message' => $e->getMessage()
-            ]);
-            return back()->with('error', 'Gagal memuat form edit reservasi');
-        }
+        $rumahMakan = $reservation->room->rumahMakan;
+        $rooms = $rumahMakan->rooms;
+        return view('reservations.edit', compact('reservation', 'rumahMakan', 'rooms'));
     }
 
     public function update(Request $request, Reservation $reservation)
     {
-        try {
-            Log::info('Reservation update request data:', [
-                'reservation_id' => $reservation->id,
-                'data' => $request->all()
-            ]);
+        $validated = $request->validate([
+            'guest_name' => 'required|string|max:255',
+            'reservation_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'purpose' => 'required|string',
+            'status' => 'required|in:pending,confirmed,cancelled'
+        ]);
 
-            $validated = $request->validate([
-                'guest_name' => 'required|string|max:255',
-                'room_id' => 'required|exists:rooms,id',
-                'reservation_date' => 'required|date|after_or_equal:today',
-                'start_time' => 'required|date_format:H:i',
-                'end_time' => 'required|date_format:H:i|after:start_time',
-                'purpose' => 'required|string'
-            ]);
-
-            // Check if the room is available
-            $room = Room::find($validated['room_id']);
-            if ($room->status !== 'tersedia' && $room->id !== $reservation->room_id) {
-                return back()
-                    ->withInput()
-                    ->with('error', 'Ruangan yang dipilih tidak tersedia');
-            }
-
-            // Check for conflicting reservations
-            $conflictingReservation = Reservation::where('room_id', $validated['room_id'])
-                ->where('id', '!=', $reservation->id)
-                ->where('reservation_date', $validated['reservation_date'])
-                ->where(function ($query) use ($validated) {
-                    $query->where(function ($q) use ($validated) {
-                        $q->where('start_time', '<=', $validated['end_time'])
-                          ->where('end_time', '>=', $validated['start_time']);
-                    });
-                })
-                ->first();
-
-            if ($conflictingReservation) {
-                return back()
-                    ->withInput()
-                    ->with('error', 'Ruangan sudah direservasi untuk waktu tersebut');
-            }
-
-            // Update the reservation
-            $reservation->update($validated);
-            
-            Log::info('Reservation updated successfully:', ['id' => $reservation->id]);
-
-            return redirect()
-                ->route('reservations.index')
-                ->with('success', 'Reservasi berhasil diperbarui');
-
-        } catch (\Exception $e) {
-            Log::error('Error updating reservation:', [
-                'reservation_id' => $reservation->id,
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return back()
-                ->withInput()
-                ->with('error', 'Gagal memperbarui reservasi: ' . $e->getMessage());
+        if ($request->status === 'confirmed') {
+            $reservation->room->update(['status' => 'dipesan']);
+        } elseif ($request->status === 'cancelled' && $reservation->status === 'confirmed') {
+            $reservation->room->update(['status' => 'tersedia']);
         }
+
+        $reservation->update($validated);
+
+        return redirect()->route('rumah-makan.show', $reservation->room->rumah_makan_id)
+            ->with('success', 'Reservasi berhasil diperbarui');
     }
 
     public function destroy(Reservation $reservation)
     {
-        try {
-            Log::info('Attempting to delete reservation:', ['id' => $reservation->id]);
-
-            $reservation->delete();
-            
-            Log::info('Reservation deleted successfully:', ['id' => $reservation->id]);
-
-            return redirect()
-                ->route('reservations.index')
-                ->with('success', 'Reservasi berhasil dibatalkan');
-        } catch (\Exception $e) {
-            Log::error('Error deleting reservation:', [
-                'reservation_id' => $reservation->id,
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return back()->with('error', 'Gagal membatalkan reservasi');
+        $rumahMakanId = $reservation->room->rumah_makan_id;
+        
+        if ($reservation->status === 'confirmed') {
+            $reservation->room->update(['status' => 'tersedia']);
         }
+        
+        $reservation->delete();
+
+        return redirect()->route('rumah-makan.show', $rumahMakanId)
+            ->with('success', 'Reservasi berhasil dihapus');
     }
 }

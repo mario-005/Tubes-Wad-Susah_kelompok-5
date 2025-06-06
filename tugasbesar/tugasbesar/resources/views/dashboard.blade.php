@@ -1,296 +1,223 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Menu List</title>
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+@section('title', 'Dashboard - Telkom Foodies')
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            background-color: rgb(78, 176, 238);
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            align-items: center;
-        }
-
-        .hamburger {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            align-items: center;
-        }
-
-        .hamburger .line {
-            width: 30px;
-            height: 3px;
-            background-color: white;
-            transition: transform 0.3s ease;
-        }
-
-        .welcome-message {
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar {
-            width: 200px;
-            background-color: rgb(78, 176, 238);
-            color: #fff;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: fixed;
-            top: 0;
-            left: -250px;
-            height: 100%;
-            transition: transform 0.3s ease-in-out;
-            z-index: 99;
-        }
-
-        .sidebar.open {
-            transform: translateX(250px);
-        }
-
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sidebar-header h3 {
-            font-size: 1.5rem;
-            color: #fff;
-            margin-bottom: 30px;
-        }
-
-        .close-btn {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-        }
-
-        .close-btn .line {
-            width: 30px;
-            height: 3px;
-            background-color: white;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 20px;
-        }
-
-        .sidebar-menu li a {
-            text-decoration: none;
-            color: white;
-            font-size: 1.1rem;
-            padding: 10px;
-            display: block;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar-menu li a:hover {
-            background-color: #4d6272;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 0;
-            padding: 20px;
-            transition: margin-left 0.3s ease-in-out;
-            margin-top: 80px;
-        }
-
-        .main-content.open {
-            margin-left: 250px;
-        }
-
-        .page-title {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .menu-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .card-body {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card-body h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .card-body p {
-            font-size: 0.95rem;
-            margin: 5px 0;
-            color: #666;
-        }
-
-        .card-actions {
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .btn-warning,
-        .btn-danger {
-            padding: 6px 12px;
-            font-size: 0.9rem;
-            border-radius: 5px;
-            display: inline-block;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .btn-warning {
-            background-color: #ffc107;
-            color: #fff;
-        }
-
-        .btn-warning:hover {
-            background-color: #e0a800;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: #fff;
-            border: none;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .no-menu {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #888;
-        }
-    </style>
-
-</head>
-
-<body>
-    <div class="wrapper">
-        <!-- Header -->
-        <header class="header">
-            <div class="hamburger" onclick="toggleSidebar()">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-            <div class="welcome-message">
-                <h4>Welcome, {{ Auth::user()->name }}!</h4>
-            </div>
-        </header>
-
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="close-btn" onclick="toggleSidebar()">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                </div>
-                <h3>Telkom Makan</h3>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('menus.index') }}">Menu List</a></li>
-                <li>
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" style="background: none; border: none; color: inherit; padding: 0; font: inherit; cursor: pointer; text-decoration: none;">Logout</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <h1 class="page-title">Menu List</h1>
-
-            @if($menus->isEmpty())
-                <p class="no-menu">No menu items found.</p>
-            @else
-                <div class="menu-grid">
-                    @foreach ($menus as $menu)
-                        <div class="card">
-                            <img src="{{ $menu->image ? asset('storage/menus/' . $menu->image) : asset('images/default.png') }}" alt="Menu Image">
-                            <div class="card-body">
-                                <h3>{{ $menu->name }}</h3>
-                                <p><strong>Price: Rp</strong> {{ $menu->price }}</p>
-                                <p><strong>Status:</strong> {{ $menu->status }}</p>
-                                <p><strong>Description:</strong> {{ $menu->description }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
+@section('content')
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Stop looking for a restaurant - find it.</h1>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search for Restaurants by Name, Cuisine, Location">
         </div>
     </div>
+</div>
 
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.querySelector('.main-content');
-            sidebar.classList.toggle('open');
-            mainContent.classList.toggle('open');
-        };
-    </script>
-</body>
+<div class="container">
+    @if(auth()->user()->role === 'admin')
+    <div class="header-actions">
+        <a href="{{ route('rumah-makan.create') }}" class="btn-add">
+            <i class="fas fa-plus"></i> Tambah Restoran
+        </a>
+    </div>
+    @endif
 
-</html>
+    <div class="restaurant-grid">
+        @foreach($rumahMakans ?? [] as $rm)
+        <div class="restaurant-card">
+            <a href="{{ route('rumah-makan.show', $rm->id) }}" class="restaurant-link">
+                <img src="{{ $rm->foto ? Storage::url($rm->foto) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4' }}" 
+                     alt="{{ $rm->nama }}" 
+                     class="restaurant-image">
+                <div class="restaurant-info">
+                    <h3 class="restaurant-name">{{ $rm->nama }}</h3>
+                    <div class="restaurant-meta">
+                        <span class="cuisine">{{ $rm->kategori }}</span>
+                        <span class="separator">|</span>
+                        <span class="location">{{ $rm->alamat }}</span>
+                    </div>
+                    <div class="restaurant-hours">
+                        {{ $rm->jam_buka ? \Carbon\Carbon::parse($rm->jam_buka)->format('H:i') : '09:00' }} PM - 
+                        {{ $rm->jam_tutup ? \Carbon\Carbon::parse($rm->jam_tutup)->format('H:i') : '21:00' }} AM
+                    </div>
+                    <div class="rating">
+                        @for($i = 1; $i <= 5; $i++)
+                            @if($i <= ($rm->rating ?? 4))
+                                <i class="fas fa-star"></i>
+                            @else
+                                <i class="far fa-star"></i>
+                            @endif
+                        @endfor
+                        <span class="review-count">({{ $rm->ulasan_count ?? rand(50, 200) }} reviews)</span>
+                    </div>
+                </div>
+            </a>
+            @if(auth()->user()->role === 'admin')
+            <div class="admin-actions">
+                <a href="{{ route('rumah-makan.edit', $rm->id) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <form action="{{ route('rumah-makan.destroy', $rm->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+            @endif
+        </div>
+        @endforeach
+    </div>
+</div>
+
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                    url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4');
+        background-size: cover;
+        background-position: center;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -80px;
+        padding-top: 80px;
+    }
+
+    .hero-content {
+        text-align: center;
+        max-width: 800px;
+        padding: 0 20px;
+    }
+
+    .hero-title {
+        color: white;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .search-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 15px 20px 15px 50px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+    }
+
+    .restaurant-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        padding: 40px 0;
+    }
+
+    .restaurant-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .restaurant-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .restaurant-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .restaurant-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .restaurant-info {
+        padding: 20px;
+    }
+
+    .restaurant-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .restaurant-meta {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 8px;
+    }
+
+    .separator {
+        margin: 0 8px;
+        color: #ddd;
+    }
+
+    .restaurant-hours {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    .rating {
+        color: #ffc107;
+        font-size: 0.9rem;
+    }
+
+    .review-count {
+        color: #666;
+        margin-left: 5px;
+    }
+
+    .admin-actions {
+        padding: 15px 20px;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+</style>
+@endsection

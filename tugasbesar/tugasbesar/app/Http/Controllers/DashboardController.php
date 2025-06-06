@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
+use App\Models\RumahMakan;
 
 class DashboardController extends Controller
 {
@@ -14,7 +15,8 @@ class DashboardController extends Controller
             return redirect()->route('menus.index'); 
         } else {
             $menus = Menu::all();
-            return view('dashboard', compact('menus')); 
+            $rumahMakans = RumahMakan::all();
+            return view('dashboard', compact('menus', 'rumahMakans')); 
         }
     }
 }

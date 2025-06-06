@@ -23,4 +23,9 @@ class Ulasan extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function rumahMakan()
+    {
+        return $this->belongsTo(RumahMakan::class, 'nama_rumah_makan', 'nama');
+    }
 }

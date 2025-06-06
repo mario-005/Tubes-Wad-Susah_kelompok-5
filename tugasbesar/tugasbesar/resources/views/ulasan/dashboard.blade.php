@@ -103,8 +103,8 @@
                         <td>{{ $ulasan->rating }}</td>
                         <td>{{ $ulasan->komentar }}</td>
                         <td>
-                            <a href="{{ route('ulasan.edit', $ulasan->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('ulasan.destroy', $ulasan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus ulasan ini?')">
+                            <a href="{{ route('admin.ulasan.edit', $ulasan->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('admin.ulasan.destroy', $ulasan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus ulasan ini?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Hapus</button>

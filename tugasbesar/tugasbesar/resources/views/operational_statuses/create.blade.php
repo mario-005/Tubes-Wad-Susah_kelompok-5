@@ -30,7 +30,7 @@
     </div>
 
     <button type="submit" class="btn btn-success">Simpan</button>
-    <a href="{{ route('operational-statuses.index') }}" class="btn btn-secondary">Kembali</a>
+    <a href="{{ route('menus.index') }}" class="btn btn-secondary">Kembali</a>
 </form>
 
 <script>

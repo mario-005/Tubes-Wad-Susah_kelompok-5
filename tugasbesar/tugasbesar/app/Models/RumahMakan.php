@@ -18,4 +18,34 @@ class RumahMakan extends Model
         'jam_tutup',
         'foto'
     ];
+
+    // Relationship with menus
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
+
+    // Relationship with rooms
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
+
+    // Relationship with reservations
+    public function reservations()
+    {
+        return $this->hasManyThrough(Reservation::class, Room::class);
+    }
+
+    // Relationship with operational statuses
+    public function operationalStatuses()
+    {
+        return $this->hasMany(OperationalStatus::class);
+    }
+
+    // Relationship with reviews
+    public function ulasans()
+    {
+        return $this->hasMany(Ulasan::class, 'nama_rumah_makan', 'nama');
+    }
 }

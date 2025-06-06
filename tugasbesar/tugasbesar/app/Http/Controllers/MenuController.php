@@ -2,64 +2,89 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\RumahMakan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
     public function index()
-        {
-            if (Auth::check() && Auth::user()->role !== 'admin') {
-                return redirect()->route('dashboard');  
-            }
-
-            $menus = Menu::all(); 
-            return view('menus.index', compact('menus'));  
-        }
-    public function create()
     {
-        if (Auth::check() && Auth::user()->role !== 'admin') {
-            return redirect()->route('dashboard'); 
-        }
+        $rumahMakans = RumahMakan::all();
+        $menus = Menu::all();
+        return view('menus.index', compact('rumahMakans', 'menus'));
+    }
 
-        return view('menus.create');
+    public function create(Request $request)
+    {
+        $rumahMakanId = $request->query('rumah_makan_id');
+        $rumahMakan = RumahMakan::findOrFail($rumahMakanId);
+        return view('menus.create', compact('rumahMakan'));
     }
 
     public function store(Request $request)
     {
-        if (Auth::check() && Auth::user()->role !== 'admin') {
-            return redirect()->route('dashboard'); 
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'required|string',
+            'image' => 'nullable|image|max:5120',
+            'status' => 'required|in:available,out_of_stock',
+            'rumah_makan_id' => 'required|exists:rumah_makans,id'
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/menu_images');
+            $validated['image'] = $path;
         }
-        Menu::create($request->all());
-        return redirect()->route('menus.index');
+
+        Menu::create($validated);
+
+        return redirect()->route('rumah-makan.show', $request->rumah_makan_id)
+            ->with('success', 'Menu berhasil ditambahkan');
     }
 
     public function edit(Menu $menu)
     {
-        if (Auth::check() && Auth::user()->role !== 'admin') {
-            return redirect()->route('dashboard');  
-        }
-
         return view('menus.edit', compact('menu'));
     }
 
     public function update(Request $request, Menu $menu)
     {
-        if (Auth::check() && Auth::user()->role !== 'admin') {
-            return redirect()->route('dashboard');
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'required|string',
+            'image' => 'nullable|image|max:5120',
+            'status' => 'required|in:available,out_of_stock'
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($menu->image) {
+                Storage::delete($menu->image);
+            }
+            $path = $request->file('image')->store('public/menu_images');
+            $validated['image'] = $path;
         }
 
-        $menu->update($request->all());
-        return redirect()->route('menus.index');
+        $menu->update($validated);
+
+        return redirect()->route('rumah-makan.show', $menu->rumah_makan_id)
+            ->with('success', 'Menu berhasil diperbarui');
     }
 
     public function destroy(Menu $menu)
     {
-        if (Auth::check() && Auth::user()->role !== 'admin') {
-            return redirect()->route('dashboard');  
+        $rumahMakanId = $menu->rumah_makan_id;
+        
+        if ($menu->image) {
+            Storage::delete($menu->image);
         }
-
+        
         $menu->delete();
-        return redirect()->route('menus.index');
+
+        return redirect()->route('rumah-makan.show', $rumahMakanId)
+            ->with('success', 'Menu berhasil dihapus');
     }
 }

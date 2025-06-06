@@ -60,7 +60,11 @@
 
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Simpan Ulasan</button>
-                            <a href="{{ route('ulasan.index') }}" class="btn btn-secondary">Kembali</a>
+                            @if(auth()->user()->role === 'admin')
+                                <a href="{{ route('menus.index') }}" class="btn btn-secondary">Kembali</a>
+                            @else
+                                <a href="{{ route('dashboard') }}" class="btn btn-secondary">Kembali</a>
+                            @endif
                         </div>
                     </form>
                 </div>

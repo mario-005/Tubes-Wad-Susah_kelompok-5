@@ -20,9 +20,9 @@ class Reservation extends Model
     ];
 
     protected $casts = [
-        'reservation_date' => 'date:Y-m-d',
-        'start_time' => 'datetime:H:i',
-        'end_time' => 'datetime:H:i'
+        'reservation_date' => 'date',
+        'start_time' => 'datetime',
+        'end_time' => 'datetime'
     ];
 
     protected $attributes = [
@@ -32,5 +32,10 @@ class Reservation extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function rumahMakan()
+    {
+        return $this->hasOneThrough(RumahMakan::class, Room::class);
     }
 }

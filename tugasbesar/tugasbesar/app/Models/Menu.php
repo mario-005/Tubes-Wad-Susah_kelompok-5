@@ -10,6 +10,16 @@ class Menu extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'price', 'image', 'description', 'status'
+        'name',
+        'price',
+        'image',
+        'description',
+        'status',
+        'rumah_makan_id'
     ];
+
+    public function rumahMakan()
+    {
+        return $this->belongsTo(RumahMakan::class);
+    }
 }

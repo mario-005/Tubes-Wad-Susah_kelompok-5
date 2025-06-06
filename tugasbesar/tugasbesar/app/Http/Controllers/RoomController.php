@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\RumahMakan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -22,42 +23,26 @@ class RoomController extends Controller
         }
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('rooms.create');
+        $rumahMakanId = $request->query('rumah_makan_id');
+        $rumahMakan = RumahMakan::findOrFail($rumahMakanId);
+        return view('rooms.create', compact('rumahMakan'));
     }
 
     public function store(Request $request)
     {
-        try {
-            Log::info('Room creation request data:', $request->all());
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+            'status' => 'required|in:tersedia,dipesan,maintenance',
+            'rumah_makan_id' => 'required|exists:rumah_makans,id'
+        ]);
 
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'capacity' => 'required|integer|min:1',
-                'status' => 'required|in:tersedia,dipesan,maintenance'
-            ]);
+        Room::create($validated);
 
-            Log::info('Attempting to create room with data:', $validated);
-
-            $room = Room::create($validated);
-            
-            Log::info('Room created successfully:', ['id' => $room->id]);
-
-            return redirect()
-                ->route('rooms.index')
-                ->with('success', 'Ruangan berhasil ditambahkan');
-
-        } catch (\Exception $e) {
-            Log::error('Error creating room:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return back()
-                ->withInput()
-                ->with('error', 'Gagal menambahkan ruangan: ' . $e->getMessage());
-        }
+        return redirect()->route('rumah-makan.show', $request->rumah_makan_id)
+            ->with('success', 'Ruangan berhasil ditambahkan');
     }
 
     public function edit(Room $room)
@@ -96,8 +81,7 @@ class RoomController extends Controller
             
             Log::info('Room updated successfully:', ['id' => $room->id]);
 
-            return redirect()
-                ->route('rooms.index')
+            return redirect()->route('rumah-makan.show', $room->rumah_makan_id)
                 ->with('success', 'Ruangan berhasil diperbarui');
 
         } catch (\Exception $e) {
@@ -118,11 +102,13 @@ class RoomController extends Controller
         try {
             Log::info('Attempting to delete room:', ['id' => $room->id]);
 
+            $rumahMakanId = $room->rumah_makan_id;
             $room->delete();
             
             Log::info('Room deleted successfully:', ['id' => $room->id]);
 
-            return back()->with('success', 'Ruangan berhasil dihapus');
+            return redirect()->route('rumah-makan.show', $rumahMakanId)
+                ->with('success', 'Ruangan berhasil dihapus');
         } catch (\Exception $e) {
             Log::error('Error deleting room:', [
                 'room_id' => $room->id,

@@ -14,7 +14,6 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-
     public function register(Request $request)
     {
         $request->validate([
@@ -32,7 +31,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return $this->redirectBasedOnRole();
+        return redirect()->route('dashboard');
     }
 
     public function showLoginForm()
@@ -42,30 +41,28 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return $this->redirectBasedOnRole();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        return back()
+            ->withInput($request->only('email'))
+            ->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ]);
     }
 
-    protected function redirectBasedOnRole()
-    {
-        if (Auth::user()->role === 'admin') {
-            return redirect()->route('menus.index'); 
-        } elseif (Auth::user()->role === 'user') {
-            return redirect()->route('dashboard'); 
-        }
-    }
-
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('login');
     }
 }

@@ -13,8 +13,14 @@ class Room extends Model
     protected $fillable = [
         'name',
         'capacity',
-        'status'
+        'status',
+        'rumah_makan_id'
     ];
+
+    public function rumahMakan()
+    {
+        return $this->belongsTo(RumahMakan::class);
+    }
 
     public function reservations()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RumahMakan;
 use App\Models\OperationalStatus;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -14,23 +15,27 @@ class OperationalStatusController extends Controller
         return view('operational_statuses.index', compact('statuses'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('operational_statuses.create');
+        $rumahMakanId = $request->query('rumah_makan_id');
+        $rumahMakan = RumahMakan::findOrFail($rumahMakanId);
+        return view('operational_statuses.create', compact('rumahMakan'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'date' => 'required|date',
             'open_time' => 'required|date_format:H:i',
             'close_time' => 'required|date_format:H:i|after:open_time',
             'status' => 'required|in:open,closed',
+            'rumah_makan_id' => 'required|exists:rumah_makans,id'
         ]);
 
-        OperationalStatus::create($request->all());
+        OperationalStatus::create($validated);
 
-        return redirect()->route('operational-statuses.index')->with('success', 'Status operasional dibuat.');
+        return redirect()->route('rumah-makan.show', $request->rumah_makan_id)
+            ->with('success', 'Status operasional berhasil ditambahkan');
     }
 
     public function show(string $id)
@@ -39,44 +44,24 @@ class OperationalStatusController extends Controller
         return view('operational_statuses.show', compact('status'));
     }
 
-    public function edit(string $id)
+    public function edit(OperationalStatus $operationalStatus)
     {
-        $status = OperationalStatus::findOrFail($id);
-        return view('operational_statuses.edit', compact('status'));
+        return view('operational_statuses.edit', compact('operationalStatus'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, OperationalStatus $operationalStatus)
     {
-        $status = OperationalStatus::findOrFail($id);
-
-        // Gunakan nilai lama jika input kosong
-        $openTime = $request->input('open_time') ?: $status->open_time;
-        $closeTime = $request->input('close_time') ?: $status->close_time;
-
-        // Validasi manual
-        $validator = \Validator::make([
-            'date' => $request->input('date'),
-            'open_time' => $openTime,
-            'close_time' => $closeTime,
-            'status' => $request->input('status'),
-        ], [
+        $validated = $request->validate([
             'date' => 'required|date',
-            'status' => 'required|in:open,closed',
+            'open_time' => 'required|date_format:H:i',
+            'close_time' => 'required|date_format:H:i|after:open_time',
+            'status' => 'required|in:open,closed'
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        $operationalStatus->update($validated);
 
-        // Update hanya data yang diubah atau fallback
-        $status->update([
-            'date' => $request->input('date'),
-            'open_time' => $openTime,
-            'close_time' => $closeTime,
-            'status' => $request->input('status'),
-        ]);
-
-        return redirect()->route('operational-statuses.index')->with('success', 'Status diperbarui.');
+        return redirect()->route('rumah-makan.show', $operationalStatus->rumah_makan_id)
+            ->with('success', 'Status operasional berhasil diperbarui');
     }
 
     public function realTimeStatus()
@@ -101,10 +86,12 @@ class OperationalStatusController extends Controller
         ]);
     }
 
-    public function destroy(string $id)
+    public function destroy(OperationalStatus $operationalStatus)
     {
-        $status = \App\Models\OperationalStatus::findOrFail($id);
-        $status->delete();
-        return redirect()->route('operational-statuses.index')->with('success', 'Jadwal dihapus.');
+        $rumahMakanId = $operationalStatus->rumah_makan_id;
+        $operationalStatus->delete();
+
+        return redirect()->route('rumah-makan.show', $rumahMakanId)
+            ->with('success', 'Status operasional berhasil dihapus');
     }
 }

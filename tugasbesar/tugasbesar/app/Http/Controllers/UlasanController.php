@@ -72,7 +72,14 @@ class UlasanController extends Controller
 
         $this->ulasan->create($request->only('nama_rumah_makan', 'nama_pengulas', 'rating', 'komentar'));
 
-        return redirect()->route('ulasan.index')->with('success', 'Ulasan berhasil ditambahkan.');
+        $user = Auth::user();
+        $successMessage = 'Ulasan berhasil ditambahkan.';
+
+        if ($user->role === 'admin') {
+            return redirect()->route('menus.index')->with('success', $successMessage);
+        }
+
+        return redirect()->route('dashboard')->with('success', $successMessage);
     }
 
     // Tampilkan detail ulasan

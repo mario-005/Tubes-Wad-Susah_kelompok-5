@@ -37,13 +37,14 @@ class RumahMakanController extends Controller
 
         RumahMakan::create($validated);
 
-        return redirect()->route('rumah-makan.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('menus.index')->with('success', 'Data berhasil ditambahkan');
     }
 
 
     public function show($id)
     {
-        $rumahMakan = RumahMakan::findOrFail($id);
+        $rumahMakan = RumahMakan::with(['menus', 'rooms', 'rooms.reservations', 'operationalStatuses', 'ulasans'])
+            ->findOrFail($id);
         return view('rumah_makan.show', compact('rumahMakan'));
     }
 
@@ -74,7 +75,7 @@ class RumahMakanController extends Controller
 
         $rumahMakan->update($validated);
 
-        return redirect()->route('rumah-makan.index')->with('success', 'Data rumah makan berhasil diperbarui!');
+        return redirect()->route('menus.index')->with('success', 'Data rumah makan berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -82,6 +83,6 @@ class RumahMakanController extends Controller
         $rumahMakan = RumahMakan::findOrFail($id);
         $rumahMakan->delete();
 
-        return redirect()->route('rumah-makan.index')->with('success', 'Rumah makan berhasil dihapus!');
+        return redirect()->route('menus.index')->with('success', 'Rumah makan berhasil dihapus!');
     }
 }

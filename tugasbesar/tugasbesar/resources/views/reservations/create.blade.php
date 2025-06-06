@@ -273,7 +273,7 @@
 
                 <div class="button-group">
                     <button type="submit" class="btn btn-primary">Buat Reservasi</button>
-                    <a href="{{ route('reservations.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('menus.index') }}" class="btn btn-secondary">Kembali</a>
                 </div>
             </form>
         </div>

@@ -61,6 +61,24 @@
             margin-bottom: 30px;
         }
 
+        .restaurant-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .restaurant-info h3 {
+            margin: 0;
+            color: #495057;
+            font-size: 1.2rem;
+        }
+
+        .restaurant-info p {
+            margin: 5px 0 0;
+            color: #6c757d;
+        }
+
         .error { 
             color: #dc3545;
             background-color: #f8d7da;
@@ -182,6 +200,11 @@
                 <p class="subtitle">Isi formulir di bawah untuk menambahkan ruangan baru</p>
             </div>
 
+            <div class="restaurant-info">
+                <h3>{{ $rumahMakan->nama }}</h3>
+                <p>{{ $rumahMakan->alamat }}</p>
+            </div>
+
             @if(session('error'))
                 <div class="error">{{ session('error') }}</div>
             @endif
@@ -192,6 +215,7 @@
 
             <form action="{{ route('rooms.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="rumah_makan_id" value="{{ $rumahMakan->id }}">
                 
                 <div class="form-group">
                     <label>Nama Ruangan</label>
@@ -238,7 +262,7 @@
 
                 <div class="button-group">
                     <button type="submit" class="btn btn-primary">Tambah Ruangan</button>
-                    <a href="{{ route('rooms.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="btn btn-secondary">Kembali</a>
                 </div>
             </form>
         </div>
