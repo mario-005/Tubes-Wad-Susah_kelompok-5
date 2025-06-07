@@ -5,10 +5,10 @@
 @section('content')
 <div class="hero-section">
     <div class="hero-content">
-        <h1 class="hero-title">Stop looking for a restaurant - find it.</h1>
+        <h1 class="hero-title">Welcome, {{ auth()->user()->name }}! 👋</h1>
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Search for Restaurants by Name, Cuisine, Location">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search for Restaurants by Name, Cuisine, Location">
         </div>
     </div>
 </div>
@@ -16,38 +16,26 @@
 <div class="container">
     @if(auth()->user()->role === 'admin')
     <div class="admin-dashboard-section">
-        <div class="section-header">
-            <h2>Admin Dashboard</h2>
-            <p>Manage your restaurants and keep your information up to date</p>
-        </div>
         <div class="admin-actions-panel">
             <a href="{{ route('rumah-makan.create') }}" class="admin-action-card">
                 <i class="fas fa-plus-circle action-icon"></i>
                 <div class="action-content">
-                    <h3>Tambah Restoran</h3>
-                    <p>Tambahkan restoran baru ke dalam sistem</p>
+                    <h3>Add Restaurant</h3>
+                    <p>Add a new restaurant to the system</p>
                 </div>
             </a>
-            <a href="{{ route('menus.create') }}" class="admin-action-card">
-                <i class="fas fa-utensils action-icon"></i>
-                <div class="action-content">
-                    <h3>Tambah Menu</h3>
-                    <p>Tambahkan menu baru untuk restoran</p>
-                </div>
-            </a>
-            <!-- You can add more admin action cards here in the future -->
         </div>
     </div>
     @endif
 
     <div class="section-header">
-        <h2>Daftar Restoran</h2>
-        <p>Temukan restoran terbaik di sekitar kampus</p>
+        <h2>Restaurant List</h2>
+        <p>Find the best restaurants around campus</p>
     </div>
 
-    <div class="restaurant-grid">
+    <div class="restaurant-grid" id="restaurantGrid">
         @foreach($rumahMakans ?? [] as $rm)
-        <div class="restaurant-card">
+        <div class="restaurant-card" data-name="{{ strtolower($rm->nama) }}" data-category="{{ strtolower($rm->kategori) }}" data-location="{{ strtolower($rm->alamat) }}">
             <a href="{{ route('rumah-makan.show', $rm->id) }}" class="restaurant-link">
                 <img src="{{ $rm->foto ? Storage::url($rm->foto) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4' }}" 
                      alt="{{ $rm->nama }}" 
@@ -60,8 +48,8 @@
                         <span class="location">{{ $rm->alamat }}</span>
                     </div>
                     <div class="restaurant-hours">
-                        {{ $rm->jam_buka ? \Carbon\Carbon::parse($rm->jam_buka)->format('H:i') : '09:00' }} PM - 
-                        {{ $rm->jam_tutup ? \Carbon\Carbon::parse($rm->jam_tutup)->format('H:i') : '21:00' }} AM
+                        {{ $rm->jam_buka ? \Carbon\Carbon::parse($rm->jam_buka)->format('H:i') : '09:00' }} - 
+                        {{ $rm->jam_tutup ? \Carbon\Carbon::parse($rm->jam_tutup)->format('H:i') : '21:00' }}
                     </div>
                     <div class="rating">
                         @for($i = 1; $i <= 5; $i++)
@@ -77,13 +65,13 @@
             </a>
             @if(auth()->user()->role === 'admin')
             <div class="admin-actions">
-                <a href="{{ route('rumah-makan.edit', $rm->id) }}" class="btn btn-warning">
+                <a href="{{ route('rumah-makan.edit', $rm->id) }}" class="btn btn-warning" title="Edit">
                     <i class="fas fa-edit"></i>
                 </a>
                 <form action="{{ route('rumah-makan.destroy', $rm->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?')" title="Delete">
                         <i class="fas fa-trash"></i>
                     </button>
                 </form>
@@ -93,6 +81,8 @@
         @endforeach
     </div>
 </div>
+
+@include('layouts.footer')
 
 <style>
     .hero-section {
@@ -311,4 +301,24 @@
         margin: 0;
     }
 </style>
+
+<script>
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        let searchTerm = e.target.value.toLowerCase();
+        let restaurantGrid = document.getElementById('restaurantGrid');
+        let restaurantCards = restaurantGrid.getElementsByClassName('restaurant-card');
+
+        Array.from(restaurantCards).forEach(card => {
+            let name = card.getAttribute('data-name');
+            let category = card.getAttribute('data-category');
+            let location = card.getAttribute('data-location');
+
+            if (name.includes(searchTerm) || category.includes(searchTerm) || location.includes(searchTerm)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>
 @endsection

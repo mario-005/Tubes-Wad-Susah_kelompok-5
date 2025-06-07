@@ -7,6 +7,8 @@ use App\Models\Ulasan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Models\RumahMakan;
+use Illuminate\Support\Facades\Storage;
 
 class UlasanController extends Controller
 {
@@ -55,22 +57,24 @@ class UlasanController extends Controller
     }
 
     // Form tambah ulasan (hanya user)
-    public function create()
+    public function create(Request $request)
     {
-        return view('ulasan.create');
+        $rumahMakanId = $request->query('rumah_makan_id');
+        $rumahMakan = RumahMakan::findOrFail($rumahMakanId);
+        return view('ulasan.create', compact('rumahMakan'));
     }
 
     // Simpan ulasan baru (hanya user)
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_rumah_makan' => 'required|string|max:255',
             'nama_pengulas' => 'required|string|max:255',
             'rating' => 'required|integer|min:1|max:5',
             'komentar' => 'required|string',
         ]);
 
-        $this->ulasan->create($request->only('nama_rumah_makan', 'nama_pengulas', 'rating', 'komentar'));
+        $this->ulasan->create($validated);
 
         $user = Auth::user();
         $successMessage = 'Ulasan berhasil ditambahkan.';
@@ -79,7 +83,8 @@ class UlasanController extends Controller
             return redirect()->route('menus.index')->with('success', $successMessage);
         }
 
-        return redirect()->route('dashboard')->with('success', $successMessage);
+        return redirect()->route('rumah-makan.show', $request->rumah_makan_id)
+            ->with('success', $successMessage);
     }
 
     // Tampilkan detail ulasan

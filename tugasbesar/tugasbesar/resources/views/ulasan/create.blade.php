@@ -249,6 +249,7 @@
             <form action="{{ route('ulasan.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="rumah_makan_id" value="{{ $rumahMakan->id }}">
+                <input type="hidden" name="nama_rumah_makan" value="{{ $rumahMakan->nama }}">
 
                 <div class="form-group">
                     <label for="nama_pengulas">Nama Anda</label>

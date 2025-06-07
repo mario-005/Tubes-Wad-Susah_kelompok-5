@@ -12,4 +12,9 @@
 
 <a href="{{ route('menus.index') }}" class="btn btn-secondary">Kembali</a>
 <a href="{{ route('operational-statuses.edit', $status->id) }}" class="btn btn-warning">Edit</a>
+
+    </div>
+</div>
+
+@include('layouts.footer')
 @endsection

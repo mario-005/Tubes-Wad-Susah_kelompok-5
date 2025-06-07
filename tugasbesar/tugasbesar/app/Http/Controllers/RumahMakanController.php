@@ -9,7 +9,7 @@ class RumahMakanController extends Controller
 {
     public function index()
     {
-        $rumahMakans = RumahMakan::all();
+        $rumahMakans = RumahMakan::with(['menus', 'rooms', 'ulasans'])->get();
         return view('rumah_makan.index', compact('rumahMakans'));
     }
 

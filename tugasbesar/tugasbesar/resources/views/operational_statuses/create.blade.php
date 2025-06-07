@@ -264,6 +264,8 @@
         </div>
     </div>
 
+    @include('layouts.footer')
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('input[type="time"]').forEach(function(input) {

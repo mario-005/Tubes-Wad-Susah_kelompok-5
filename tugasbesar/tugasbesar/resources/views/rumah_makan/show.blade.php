@@ -18,11 +18,11 @@
                             @endif
                         </div>
                         <div class="col-md-8">
-                            <h4>Informasi Rumah Makan</h4>
-                            <p><strong>Alamat:</strong> {{ $rumahMakan->alamat }}</p>
-                            <p><strong>Kontak:</strong> {{ $rumahMakan->kontak ?? 'Tidak tersedia' }}</p>
-                            <p><strong>Kategori:</strong> {{ $rumahMakan->kategori }}</p>
-                            <p><strong>Jam Operasional:</strong> {{ $rumahMakan->jam_buka }} - {{ $rumahMakan->jam_tutup }}</p>
+                            <h4>Restaurant Information</h4>
+                            <p><strong>Address:</strong> {{ $rumahMakan->alamat }}</p>
+                            <p><strong>Contact:</strong> {{ $rumahMakan->kontak ?? 'Not available' }}</p>
+                            <p><strong>Category:</strong> {{ $rumahMakan->kategori }}</p>
+                            <p><strong>Operating Hours:</strong> {{ $rumahMakan->jam_buka }} - {{ $rumahMakan->jam_tutup }}</p>
                         </div>
                     </div>
                 </div>
@@ -37,19 +37,19 @@
         </li>
         @if(Auth::user()->role === 'admin')
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="rooms-tab" data-bs-toggle="tab" data-bs-target="#rooms" type="button" role="tab">Ruangan</button>
+            <button class="nav-link" id="rooms-tab" data-bs-toggle="tab" data-bs-target="#rooms" type="button" role="tab">Rooms</button>
         </li>
         @endif
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="reservations-tab" data-bs-toggle="tab" data-bs-target="#reservations" type="button" role="tab">Reservasi</button>
+            <button class="nav-link" id="reservations-tab" data-bs-toggle="tab" data-bs-target="#reservations" type="button" role="tab">Reservations</button>
         </li>
         @if(Auth::user()->role === 'admin')
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="operational-tab" data-bs-toggle="tab" data-bs-target="#operational" type="button" role="tab">Status Operasional</button>
+            <button class="nav-link" id="operational-tab" data-bs-toggle="tab" data-bs-target="#operational" type="button" role="tab">Operational Status</button>
         </li>
         @endif
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">Ulasan</button>
+            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">Reviews</button>
         </li>
     </ul>
 
@@ -60,7 +60,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Menu</h3>
                 @if(Auth::user()->role === 'admin')
-                <a href="{{ route('menus.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Tambah Menu</a>
+                <a href="{{ route('menus.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Add Menu</a>
                 @endif
             </div>
             <div class="row">
@@ -73,7 +73,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ $menu->name }}</h5>
                                 <p class="card-text">{{ $menu->description }}</p>
-                                <p class="card-text"><strong>Harga:</strong> Rp {{ number_format($menu->price, 0, ',', '.') }}</p>
+                                <p class="card-text"><strong>Price:</strong> Rp {{ number_format($menu->price, 0, ',', '.') }}</p>
                                 <p class="card-text"><small class="text-muted">Status: {{ $menu->status }}</small></p>
                                 @if(Auth::user()->role === 'admin')
                                 <div class="mt-3">
@@ -81,7 +81,7 @@
                                     <form action="{{ route('menus.destroy', $menu->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
                                     </form>
                                 </div>
                                 @endif
@@ -90,7 +90,7 @@
                     </div>
                 @empty
                     <div class="col-12">
-                        <p class="text-center">Belum ada menu yang tersedia.</p>
+                        <p class="text-center">No menu items available yet.</p>
                     </div>
                 @endforelse
             </div>
@@ -100,37 +100,37 @@
         <!-- Rooms Tab -->
         <div class="tab-pane fade" id="rooms" role="tabpanel">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Ruangan</h3>
-                <a href="{{ route('rooms.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Tambah Ruangan</a>
+                <h3>Rooms</h3>
+                <a href="{{ route('rooms.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Add Room</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Nama Ruangan</th>
-                            <th>Kapasitas</th>
+                            <th>Room Name</th>
+                            <th>Capacity</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($rumahMakan->rooms as $room)
                             <tr>
                                 <td>{{ $room->name }}</td>
-                                <td>{{ $room->capacity }} orang</td>
+                                <td>{{ $room->capacity }} people</td>
                                 <td>{{ $room->status }}</td>
                                 <td>
                                     <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-sm btn-warning">Edit</a>
                                     <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">Belum ada ruangan yang tersedia.</td>
+                                <td colspan="4" class="text-center">No rooms available yet.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -142,20 +142,20 @@
         <!-- Reservations Tab -->
         <div class="tab-pane fade" id="reservations" role="tabpanel">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Reservasi</h3>
-                <a href="{{ route('reservations.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Buat Reservasi</a>
+                <h3>Reservations</h3>
+                <a href="{{ route('reservations.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Make Reservation</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Ruangan</th>
-                            <th>Nama Tamu</th>
-                            <th>Tanggal</th>
-                            <th>Waktu</th>
+                            <th>Room</th>
+                            <th>Guest Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
                             <th>Status</th>
                             @if(Auth::user()->role === 'admin')
-                            <th>Aksi</th>
+                            <th>Actions</th>
                             @endif
                         </tr>
                     </thead>
@@ -173,14 +173,14 @@
                                     <form action="{{ route('reservations.destroy', $reservation->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
                                     </form>
                                 </td>
                                 @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ Auth::user()->role === 'admin' ? '6' : '5' }}" class="text-center">Belum ada reservasi.</td>
+                                <td colspan="{{ Auth::user()->role === 'admin' ? '6' : '5' }}" class="text-center">No reservations yet.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -192,18 +192,18 @@
         <!-- Operational Status Tab -->
         <div class="tab-pane fade" id="operational" role="tabpanel">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Status Operasional</h3>
+                <h3>Operational Status</h3>
                 <a href="{{ route('operational-statuses.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Update Status</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Hari</th>
-                            <th>Jam Buka</th>
-                            <th>Jam Tutup</th>
+                            <th>Day</th>
+                            <th>Opening Time</th>
+                            <th>Closing Time</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -218,13 +218,13 @@
                                     <form action="{{ route('operational-statuses.destroy', $status->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">Belum ada status operasional.</td>
+                                <td colspan="5" class="text-center">No operational status available yet.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -236,8 +236,8 @@
         <!-- Reviews Tab -->
         <div class="tab-pane fade" id="reviews" role="tabpanel">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Ulasan</h3>
-                <a href="{{ route('ulasan.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Tambah Ulasan</a>
+                <h3>Reviews</h3>
+                <a href="{{ route('ulasan.create', ['rumah_makan_id' => $rumahMakan->id]) }}" class="btn btn-primary">Add Review</a>
             </div>
             <div class="row">
                 @forelse($rumahMakan->ulasans as $ulasan)
@@ -248,22 +248,18 @@
                                     <h5 class="card-title">{{ $ulasan->nama_pengulas }}</h5>
                                     <div class="text-warning">
                                         @for($i = 0; $i < $ulasan->rating; $i++)
-                                            ★
-                                        @endfor
-                                        @for($i = $ulasan->rating; $i < 5; $i++)
-                                            ☆
+                                            <i class="fas fa-star"></i>
                                         @endfor
                                     </div>
                                 </div>
                                 <p class="card-text">{{ $ulasan->komentar }}</p>
-                                <p class="card-text"><small class="text-muted">{{ $ulasan->created_at->diffForHumans() }}</small></p>
+                                <p class="card-text"><small class="text-muted">Posted on {{ $ulasan->created_at->format('M d, Y') }}</small></p>
                                 @if(Auth::user()->role === 'admin')
-                                <div class="mt-2">
-                                    <a href="{{ route('admin.ulasan.edit', $ulasan->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <form action="{{ route('admin.ulasan.destroy', $ulasan->id) }}" method="POST" class="d-inline">
+                                <div class="mt-3">
+                                    <form action="{{ route('ulasan.destroy', $ulasan->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus ulasan ini?')">Hapus</button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
                                     </form>
                                 </div>
                                 @endif
@@ -272,7 +268,7 @@
                     </div>
                 @empty
                     <div class="col-12">
-                        <p class="text-center">Belum ada ulasan.</p>
+                        <p class="text-center">No reviews yet.</p>
                     </div>
                 @endforelse
             </div>
@@ -280,9 +276,12 @@
     </div>
 
     <div class="mt-4">
-        <a href="{{ route('dashboard') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('dashboard') }}" class="btn btn-secondary">Back</a>
     </div>
 </div>
+
+@include('layouts.footer')
+@endsection
 
 <style>
     .nav-tabs .nav-link {
@@ -305,4 +304,3 @@
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 </style>
-@endsection
