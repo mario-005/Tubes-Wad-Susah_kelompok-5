@@ -118,6 +118,6 @@ class UlasanController extends Controller
     public function destroy(Ulasan $ulasan)
     {
         $ulasan->delete();
-        return redirect()->route('admin.ulasan.index')->with('success', 'Ulasan berhasil dihapus.');
+        return redirect()->route('ulasan.index')->with('success', 'Ulasan berhasil dihapus.');
     }
 }
