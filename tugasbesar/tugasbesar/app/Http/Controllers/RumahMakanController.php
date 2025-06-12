@@ -32,7 +32,7 @@ class RumahMakanController extends Controller
 
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('public/fotos');
-            $validated['foto'] = $path;
+            $validated['foto'] = str_replace('public/', '', $path);
         }
 
         RumahMakan::create($validated);
@@ -70,7 +70,7 @@ class RumahMakanController extends Controller
         
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('public/fotos');
-            $validated['foto'] = $path;
+            $validated['foto'] = str_replace('public/', '', $path);
         }
 
         $rumahMakan->update($validated);

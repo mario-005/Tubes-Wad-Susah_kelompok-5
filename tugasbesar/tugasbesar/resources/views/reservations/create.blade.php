@@ -326,6 +326,14 @@
                     @enderror
                 </div>
 
+                <div class="form-group">
+                    <label for="purpose">Keperluan</label>
+                    <textarea id="purpose" name="purpose" rows="2" required>{{ old('purpose') }}</textarea>
+                    @error('purpose')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 <div class="button-group">
                     <a href="{{ route('rumah-makan.show', $rumahMakan->id) }}" class="btn btn-back">
                         <i class="fas fa-times"></i> Batal

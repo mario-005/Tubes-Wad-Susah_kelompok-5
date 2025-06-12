@@ -69,6 +69,8 @@
                         <div class="card">
                             @if($menu->image)
                                 <img src="{{ Storage::url($menu->image) }}" class="card-img-top" alt="{{ $menu->name }}">
+                            @else
+                                <img src="https://via.placeholder.com/400x300?text=No+Image" class="card-img-top" alt="No Image">
                             @endif
                             <div class="card-body">
                                 <h5 class="card-title">{{ $menu->name }}</h5>

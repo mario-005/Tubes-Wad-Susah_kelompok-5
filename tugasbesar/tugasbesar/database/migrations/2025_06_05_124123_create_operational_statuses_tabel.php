@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('operational_statuses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('rumah_makan_id')->constrained('rumah_makans')->onDelete('cascade');
             $table->date('date');
             $table->time('open_time')->nullable();
             $table->time('close_time')->nullable();

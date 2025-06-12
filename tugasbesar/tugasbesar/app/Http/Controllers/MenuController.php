@@ -36,7 +36,7 @@ class MenuController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/menu_images');
-            $validated['image'] = $path;
+            $validated['image'] = str_replace('public/', '', $path);
         }
 
         Menu::create($validated);
@@ -65,7 +65,7 @@ class MenuController extends Controller
                 Storage::delete($menu->image);
             }
             $path = $request->file('image')->store('public/menu_images');
-            $validated['image'] = $path;
+            $validated['image'] = str_replace('public/', '', $path);
         }
 
         $menu->update($validated);

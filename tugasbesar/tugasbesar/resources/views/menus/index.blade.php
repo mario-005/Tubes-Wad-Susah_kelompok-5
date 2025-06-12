@@ -83,6 +83,28 @@
         </div>
         @endforeach
     </div>
+
+    <div class="section-header">
+        <h2>Menu List</h2>
+        <p>All available menus</p>
+    </div>
+    <div class="row">
+        @foreach($menus as $menu)
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    @if($menu->image)
+                        <img src="{{ Storage::url($menu->image) }}" class="card-img-top" alt="{{ $menu->name }}">
+                    @endif
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $menu->name }}</h5>
+                        <p class="card-text">{{ $menu->description }}</p>
+                        <p class="card-text"><strong>Price:</strong> Rp {{ number_format($menu->price, 0, ',', '.') }}</p>
+                        <p class="card-text"><small class="text-muted">Status: {{ $menu->status }}</small></p>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>
 
 @include('layouts.footer')

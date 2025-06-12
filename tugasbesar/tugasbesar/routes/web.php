@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/ulasan/create', [UlasanController::class, 'create'])->name('ulasan.create');
         Route::post('/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
         Route::get('/ulasan/{ulasan}', [UlasanController::class, 'show'])->name('ulasan.show');
+        Route::delete('/ulasan/{ulasan}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
     });
 
     // Admin routes - can edit and delete reviews
