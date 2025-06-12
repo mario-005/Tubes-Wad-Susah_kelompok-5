@@ -34,41 +34,41 @@
     </div>
 
     <div class="restaurant-grid" id="restaurantGrid">
-        @foreach($rumahMakans ?? [] as $rm)
-        <div class="restaurant-card" data-name="{{ strtolower($rm->nama) }}" data-category="{{ strtolower($rm->kategori) }}" data-location="{{ strtolower($rm->alamat) }}">
-            <a href="{{ route('rumah-makan.show', $rm->id) }}" class="restaurant-link">
-                <img src="{{ $rm->foto ? Storage::url($rm->foto) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4' }}" 
-                     alt="{{ $rm->nama }}" 
+        @foreach($rumahMakans ?? [] as $restaurant)
+        <div class="restaurant-card" data-name="{{ strtolower($restaurant->nama) }}" data-category="{{ strtolower($restaurant->kategori) }}" data-location="{{ strtolower($restaurant->alamat) }}">
+            <a href="{{ route('rumah-makan.show', $restaurant->id) }}" class="restaurant-link">
+                <img src="{{ $restaurant->foto ? Storage::url($restaurant->foto) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4' }}" 
+                     alt="{{ $restaurant->nama }}" 
                      class="restaurant-image">
                 <div class="restaurant-info">
-                    <h3 class="restaurant-name">{{ $rm->nama }}</h3>
+                    <h3 class="restaurant-name">{{ $restaurant->nama }}</h3>
                     <div class="restaurant-meta">
-                        <span class="cuisine">{{ $rm->kategori }}</span>
+                        <span class="cuisine">{{ $restaurant->kategori }}</span>
                         <span class="separator">|</span>
-                        <span class="location">{{ $rm->alamat }}</span>
+                        <span class="location">{{ $restaurant->alamat }}</span>
                     </div>
                     <div class="restaurant-hours">
-                        {{ $rm->jam_buka ? \Carbon\Carbon::parse($rm->jam_buka)->format('H:i') : '09:00' }} - 
-                        {{ $rm->jam_tutup ? \Carbon\Carbon::parse($rm->jam_tutup)->format('H:i') : '21:00' }}
+                        {{ $restaurant->jam_buka ? \Carbon\Carbon::parse($restaurant->jam_buka)->format('H:i') : '09:00' }} - 
+                        {{ $restaurant->jam_tutup ? \Carbon\Carbon::parse($restaurant->jam_tutup)->format('H:i') : '21:00' }}
                     </div>
                     <div class="rating">
                         @for($i = 1; $i <= 5; $i++)
-                            @if($i <= ($rm->rating ?? 4))
+                            @if($i <= ($restaurant->rating ?? 4))
                                 <i class="fas fa-star"></i>
                             @else
                                 <i class="far fa-star"></i>
                             @endif
                         @endfor
-                        <span class="review-count">({{ $rm->ulasan_count ?? rand(50, 200) }} reviews)</span>
+                        <span class="review-count">({{ $restaurant->ulasan_count ?? rand(50, 200) }} reviews)</span>
                     </div>
                 </div>
             </a>
             @if(auth()->user()->role === 'admin')
             <div class="admin-actions">
-                <a href="{{ route('rumah-makan.edit', $rm->id) }}" class="btn btn-warning" title="Edit">
+                <a href="{{ route('rumah-makan.edit', $restaurant->id) }}" class="btn btn-warning" title="Edit">
                     <i class="fas fa-edit"></i>
                 </a>
-                <form action="{{ route('rumah-makan.destroy', $rm->id) }}" method="POST" class="d-inline">
+                <form action="{{ route('rumah-makan.destroy', $restaurant->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?')" title="Delete">
