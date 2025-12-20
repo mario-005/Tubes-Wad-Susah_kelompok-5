@@ -38,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
                  ->namespace($this->namespace)
                  ->group(base_path('routes/web.php'));
         });
+
+         if ($this->app->environment('production')) {
+        \URL::forceScheme('https');
+    }
     }
 
     /**
