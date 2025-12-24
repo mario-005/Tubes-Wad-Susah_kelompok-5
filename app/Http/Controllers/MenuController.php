@@ -34,9 +34,10 @@ class MenuController extends Controller
             'rumah_makan_id' => 'required|exists:rumah_makans,id'
         ]);
 
+        $disk = config('filesystems.default');
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/menu_images');
-            $validated['image'] = str_replace('public/', '', $path);
+            $path = $request->file('image')->store('menu_images', $disk);
+            $validated['image'] = $path;
         }
 
         Menu::create($validated);
@@ -60,12 +61,13 @@ class MenuController extends Controller
             'status' => 'required|in:available,out_of_stock'
         ]);
 
+        $disk = config('filesystems.default');
         if ($request->hasFile('image')) {
             if ($menu->image) {
-                Storage::delete($menu->image);
+                Storage::disk($disk)->delete($menu->image);
             }
-            $path = $request->file('image')->store('public/menu_images');
-            $validated['image'] = str_replace('public/', '', $path);
+            $path = $request->file('image')->store('menu_images', $disk);
+            $validated['image'] = $path;
         }
 
         $menu->update($validated);
@@ -77,9 +79,10 @@ class MenuController extends Controller
     public function destroy(Menu $menu)
     {
         $rumahMakanId = $menu->rumah_makan_id;
+        $disk = config('filesystems.default');
         
         if ($menu->image) {
-            Storage::delete($menu->image);
+            Storage::disk($disk)->delete($menu->image);
         }
         
         $menu->delete();
