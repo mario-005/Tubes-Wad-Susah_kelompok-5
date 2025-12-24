@@ -36,8 +36,13 @@ class MenuController extends Controller
 
         $disk = config('filesystems.default');
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('menu_images', $disk);
-            $validated['image'] = $path;
+            try {
+                $path = $request->file('image')->store('menu_images', $disk);
+                $validated['image'] = $path;
+            } catch (\Throwable $e) {
+                logger()->error('Menu image upload failed: '.$e->getMessage());
+                $validated['image'] = '';
+            }
         }
 
         Menu::create($validated);
@@ -63,11 +68,19 @@ class MenuController extends Controller
 
         $disk = config('filesystems.default');
         if ($request->hasFile('image')) {
-            if ($menu->image) {
-                Storage::disk($disk)->delete($menu->image);
+            try {
+                if ($menu->image) {
+                    Storage::disk($disk)->delete($menu->image);
+                }
+            } catch (\Throwable $e) {
+                logger()->warning('Menu image delete failed: '.$e->getMessage());
             }
-            $path = $request->file('image')->store('menu_images', $disk);
-            $validated['image'] = $path;
+            try {
+                $path = $request->file('image')->store('menu_images', $disk);
+                $validated['image'] = $path;
+            } catch (\Throwable $e) {
+                logger()->error('Menu image upload failed: '.$e->getMessage());
+            }
         }
 
         $menu->update($validated);
@@ -82,7 +95,11 @@ class MenuController extends Controller
         $disk = config('filesystems.default');
         
         if ($menu->image) {
-            Storage::disk($disk)->delete($menu->image);
+            try {
+                Storage::disk($disk)->delete($menu->image);
+            } catch (\Throwable $e) {
+                logger()->warning('Menu image delete failed: '.$e->getMessage());
+            }
         }
         
         $menu->delete();

@@ -38,8 +38,9 @@
         <div class="restaurant-card" data-name="{{ strtolower($restaurant->nama) }}" data-category="{{ strtolower($restaurant->kategori) }}" data-location="{{ strtolower($restaurant->alamat) }}">
             <a href="{{ route('rumah-makan.show', $restaurant->id) }}" class="restaurant-link">
                 @php
-                    $fotoUrl = $restaurant->foto && file_exists(public_path('storage/' . str_replace('public/', '', $restaurant->foto)))
-                        ? Storage::url($restaurant->foto)
+                    $disk = config('filesystems.default');
+                    $fotoUrl = !empty($restaurant->foto)
+                        ? Storage::disk($disk)->url($restaurant->foto)
                         : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4';
                 @endphp
                 <img src="{{ $fotoUrl }}" alt="{{ $restaurant->nama }}" class="restaurant-image">

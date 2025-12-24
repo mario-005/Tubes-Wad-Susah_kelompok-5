@@ -194,8 +194,8 @@
             </div>
 
             <div class="form-group">
-                <label for="image">Foto Menu</label>
-                <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                <label for="image">Foto Menu (opsional)</label>
+                <input type="file" name="image" id="image" class="form-control" accept="image/*">
             </div>
 
             <div class="form-group">
