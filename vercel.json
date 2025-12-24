@@ -14,8 +14,8 @@
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "false",
-        "APP_NAME": "FinanceTracker",
-        "APP_URL": "https://financetracker.vercel.app",
+        "APP_NAME": "TelkomFoodies",
+        "APP_URL": "https://telkomfoodies.vercel.app",
         "APP_KEY": "base64:TGaVaXwhWgjn9akhE4SCSIjGG/cQqvICUQ+PgLA3Bs0=",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
