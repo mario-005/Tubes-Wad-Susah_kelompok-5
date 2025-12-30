@@ -37,7 +37,7 @@
         @foreach($rumahMakans ?? [] as $restaurant)
         <div class="restaurant-card" data-name="{{ strtolower($restaurant->nama) }}" data-category="{{ strtolower($restaurant->kategori) }}" data-location="{{ strtolower($restaurant->alamat) }}">
             <a href="{{ route('rumah-makan.show', $restaurant->id) }}" class="restaurant-link">
-                <img src="{{ $restaurant->fotoUrl }}" alt="{{ $restaurant->nama }}" class="restaurant-image">
+                <img src="{{ \App\Helpers\ImageHelper::getRestaurantImage($restaurant) }}" alt="{{ $restaurant->nama }}" class="restaurant-image">
                 <div class="restaurant-info">
                     <h3 class="restaurant-name">{{ $restaurant->nama }}</h3>
                     <div class="restaurant-meta">

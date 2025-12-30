@@ -11,9 +11,14 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $rumahMakans = RumahMakan::all();
-        $menus = Menu::all();
-        return view('menus.index', compact('rumahMakans', 'menus'));
+        try {
+            $rumahMakans = RumahMakan::all();
+            $menus = Menu::all();
+            return view('menus.index', compact('rumahMakans', 'menus'));
+        } catch (\Exception $e) {
+            \Log::error('MenuController@index error: ' . $e->getMessage());
+            return response()->view('errors.500', [], 500);
+        }
     }
 
     public function create(Request $request)
