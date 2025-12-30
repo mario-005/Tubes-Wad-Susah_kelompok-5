@@ -205,9 +205,9 @@
             <div class="form-group">
                 <label for="foto">Masukkan Foto Restaurant </label>
                 <div class="upload-box" onclick="document.getElementById('foto').click();">
-                    <input type="file" name="foto" id="foto" accept="image/jpeg,image/png,image/jpg,image/gif,video/mp4" onchange="handleFileUpload(this)">
+                    <input type="file" name="foto" id="foto" accept="image/jpeg,image/png,image/jpg,image/gif" onchange="handleFileUpload(this)">
                     <label for="foto" id="file-label">Choose a file or drag & drop it here</label>
-                    <div class="note">JPEG, PNG, PDG, and MP4 formats, up to 50MB</div>
+                    <div class="note">JPEG, PNG, and GIF formats, up to 50MB</div>
                 </div>
             </div>
 

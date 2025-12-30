@@ -25,19 +25,21 @@ class RumahMakanController extends Controller
             'alamat' => 'required|string|max:255',
             'kontak' => 'nullable|string|max:255',
             'kategori' => 'required|string|max:255',
-            'jam_buka' => 'nullable',
-            'jam_tutup' => 'nullable',
-            'foto' => 'nullable|image|max:51200', 
+            'jam_buka' => 'nullable|date_format:H:i',
+            'jam_tutup' => 'nullable|date_format:H:i',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:51200', 
         ]);
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('public/fotos');
-            $validated['foto'] = str_replace('public/', '', $path);
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('fotos', $filename, 'public');
+            $validated['foto'] = $path;
         }
 
         RumahMakan::create($validated);
 
-        return redirect()->route('menus.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('rumah-makan.index')->with('success', 'Data berhasil ditambahkan');
     }
 
 
@@ -61,21 +63,23 @@ class RumahMakanController extends Controller
             'alamat' => 'required|string|max:255',
             'kontak' => 'nullable|string|max:255',
             'kategori' => 'required|string|max:255',
-            'jam_buka' => 'nullable',
-            'jam_tutup' => 'nullable',
-            'foto' => 'nullable|image|max:51200',
+            'jam_buka' => 'nullable|date_format:H:i',
+            'jam_tutup' => 'nullable|date_format:H:i',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:51200',
         ]);
 
         $rumahMakan = RumahMakan::findOrFail($id);
         
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('public/fotos');
-            $validated['foto'] = str_replace('public/', '', $path);
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('fotos', $filename, 'public');
+            $validated['foto'] = $path;
         }
 
         $rumahMakan->update($validated);
 
-        return redirect()->route('menus.index')->with('success', 'Data rumah makan berhasil diperbarui!');
+        return redirect()->route('rumah-makan.index')->with('success', 'Data rumah makan berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -83,6 +87,6 @@ class RumahMakanController extends Controller
         $rumahMakan = RumahMakan::findOrFail($id);
         $rumahMakan->delete();
 
-        return redirect()->route('menus.index')->with('success', 'Rumah makan berhasil dihapus!');
+        return redirect()->route('rumah-makan.index')->with('success', 'Rumah makan berhasil dihapus!');
     }
 }
