@@ -30,30 +30,35 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required|string',
-            'image' => 'nullable|image|max:5120',
-            'status' => 'required|in:available,out_of_stock',
-            'rumah_makan_id' => 'required|exists:rumah_makans,id'
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+                'description' => 'required|string',
+                'image' => 'nullable|image|max:5120',
+                'status' => 'required|in:available,out_of_stock',
+                'rumah_makan_id' => 'required|exists:rumah_makans,id'
+            ]);
 
-        $disk = config('filesystems.default');
-        if ($request->hasFile('image')) {
-            try {
-                $path = $request->file('image')->store('menu_images', $disk);
-                $validated['image'] = $path;
-            } catch (\Throwable $e) {
-                logger()->error('Menu image upload failed: '.$e->getMessage());
-                $validated['image'] = '';
+            if ($request->hasFile('image')) {
+                try {
+                    $disk = config('filesystems.default', 'local');
+                    $path = $request->file('image')->store('menu_images', $disk);
+                    $validated['image'] = $path;
+                } catch (\Throwable $e) {
+                    logger()->error('Menu image upload failed: '.$e->getMessage());
+                    $validated['image'] = null;
+                }
             }
+
+            Menu::create($validated);
+
+            return redirect()->route('rumah-makan.show', $request->rumah_makan_id)
+                ->with('success', 'Menu berhasil ditambahkan');
+        } catch (\Exception $e) {
+            logger()->error('MenuController@store error: ' . $e->getMessage());
+            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat menambahkan menu']);
         }
-
-        Menu::create($validated);
-
-        return redirect()->route('rumah-makan.show', $request->rumah_makan_id)
-            ->with('success', 'Menu berhasil ditambahkan');
     }
 
     public function edit(Menu $menu)
@@ -63,53 +68,60 @@ class MenuController extends Controller
 
     public function update(Request $request, Menu $menu)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required|string',
-            'image' => 'nullable|image|max:5120',
-            'status' => 'required|in:available,out_of_stock'
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+                'description' => 'required|string',
+                'image' => 'nullable|image|max:5120',
+                'status' => 'required|in:available,out_of_stock'
+            ]);
 
-        $disk = config('filesystems.default');
-        if ($request->hasFile('image')) {
-            try {
-                if ($menu->image) {
-                    Storage::disk($disk)->delete($menu->image);
+            if ($request->hasFile('image')) {
+                try {
+                    $disk = config('filesystems.default', 'local');
+                    if ($menu->image) {
+                        Storage::disk($disk)->delete($menu->image);
+                    }
+                    $path = $request->file('image')->store('menu_images', $disk);
+                    $validated['image'] = $path;
+                } catch (\Throwable $e) {
+                    logger()->error('Menu image upload failed: '.$e->getMessage());
+                    unset($validated['image']);
                 }
-            } catch (\Throwable $e) {
-                logger()->warning('Menu image delete failed: '.$e->getMessage());
             }
-            try {
-                $path = $request->file('image')->store('menu_images', $disk);
-                $validated['image'] = $path;
-            } catch (\Throwable $e) {
-                logger()->error('Menu image upload failed: '.$e->getMessage());
-            }
+
+            $menu->update($validated);
+
+            return redirect()->route('rumah-makan.show', $menu->rumah_makan_id)
+                ->with('success', 'Menu berhasil diperbarui');
+        } catch (\Exception $e) {
+            logger()->error('MenuController@update error: ' . $e->getMessage());
+            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat mengupdate menu']);
         }
-
-        $menu->update($validated);
-
-        return redirect()->route('rumah-makan.show', $menu->rumah_makan_id)
-            ->with('success', 'Menu berhasil diperbarui');
     }
 
     public function destroy(Menu $menu)
     {
-        $rumahMakanId = $menu->rumah_makan_id;
-        $disk = config('filesystems.default');
-        
-        if ($menu->image) {
-            try {
-                Storage::disk($disk)->delete($menu->image);
-            } catch (\Throwable $e) {
-                logger()->warning('Menu image delete failed: '.$e->getMessage());
+        try {
+            $rumahMakanId = $menu->rumah_makan_id;
+            
+            if ($menu->image) {
+                try {
+                    $disk = config('filesystems.default', 'local');
+                    Storage::disk($disk)->delete($menu->image);
+                } catch (\Throwable $e) {
+                    logger()->warning('Menu image delete failed: '.$e->getMessage());
+                }
             }
-        }
-        
-        $menu->delete();
+            
+            $menu->delete();
 
-        return redirect()->route('rumah-makan.show', $rumahMakanId)
-            ->with('success', 'Menu berhasil dihapus');
+            return redirect()->route('rumah-makan.show', $rumahMakanId)
+                ->with('success', 'Menu berhasil dihapus');
+        } catch (\Exception $e) {
+            logger()->error('MenuController@destroy error: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat menghapus menu']);
+        }
     }
 }
