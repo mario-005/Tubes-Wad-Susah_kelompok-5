@@ -40,14 +40,17 @@ class MenuController extends Controller
                 'rumah_makan_id' => 'required|exists:rumah_makans,id'
             ]);
 
+            // Set default empty string untuk image jika tidak ada upload
+            $validated['image'] = '';
+            
             if ($request->hasFile('image')) {
                 try {
                     $disk = config('filesystems.default', 'local');
                     $path = $request->file('image')->store('menu_images', $disk);
                     $validated['image'] = $path;
                 } catch (\Throwable $e) {
-                    logger()->error('Menu image upload failed: '.$e->getMessage());
-                    $validated['image'] = null;
+                    \Log::error('Menu image upload failed: '.$e->getMessage());
+                    // Tetap gunakan empty string jika upload gagal
                 }
             }
 
@@ -55,9 +58,11 @@ class MenuController extends Controller
 
             return redirect()->route('rumah-makan.show', $request->rumah_makan_id)
                 ->with('success', 'Menu berhasil ditambahkan');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withInput()->withErrors($e->errors());
         } catch (\Exception $e) {
-            logger()->error('MenuController@store error: ' . $e->getMessage());
-            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat menambahkan menu']);
+            \Log::error('MenuController@store error: ' . $e->getMessage() . ' | Line: ' . $e->getLine() . ' | File: ' . $e->getFile());
+            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
 
@@ -86,7 +91,8 @@ class MenuController extends Controller
                     $path = $request->file('image')->store('menu_images', $disk);
                     $validated['image'] = $path;
                 } catch (\Throwable $e) {
-                    logger()->error('Menu image upload failed: '.$e->getMessage());
+                    \Log::error('Menu image upload failed: '.$e->getMessage());
+                    // Jangan update image jika upload gagal
                     unset($validated['image']);
                 }
             }
@@ -95,9 +101,11 @@ class MenuController extends Controller
 
             return redirect()->route('rumah-makan.show', $menu->rumah_makan_id)
                 ->with('success', 'Menu berhasil diperbarui');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withInput()->withErrors($e->errors());
         } catch (\Exception $e) {
-            logger()->error('MenuController@update error: ' . $e->getMessage());
-            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat mengupdate menu']);
+            \Log::error('MenuController@update error: ' . $e->getMessage() . ' | Line: ' . $e->getLine());
+            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
 
