@@ -31,10 +31,15 @@ class RumahMakanController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('fotos', $filename, 'public');
-            $validated['foto'] = $path;
+            try {
+                $file = $request->file('foto');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('fotos', $filename, 'public');
+                $validated['foto'] = $path;
+            } catch (\Exception $e) {
+                // Jika gagal upload, lewati foto (untuk Vercel dan environment tanpa persistent storage)
+                $validated['foto'] = null;
+            }
         }
 
         RumahMakan::create($validated);
@@ -71,10 +76,15 @@ class RumahMakanController extends Controller
         $rumahMakan = RumahMakan::findOrFail($id);
         
         if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('fotos', $filename, 'public');
-            $validated['foto'] = $path;
+            try {
+                $file = $request->file('foto');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('fotos', $filename, 'public');
+                $validated['foto'] = $path;
+            } catch (\Exception $e) {
+                // Jika gagal upload, lewati foto (untuk Vercel dan environment tanpa persistent storage)
+                unset($validated['foto']);
+            }
         }
 
         $rumahMakan->update($validated);

@@ -37,8 +37,13 @@ class RumahMakanApiController extends Controller
         }
         $data = $validator->validated();
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('public/fotos');
-            $data['foto'] = str_replace('public/', '', $path);
+            try {
+                $path = $request->file('foto')->store('public/fotos');
+                $data['foto'] = str_replace('public/', '', $path);
+            } catch (\Exception $e) {
+                // File upload gagal, lewati foto
+                $data['foto'] = null;
+            }
         }
         $rumahMakan = RumahMakan::create($data);
         return response()->json($rumahMakan, 201);
@@ -79,8 +84,13 @@ class RumahMakanApiController extends Controller
         }
         $data = $validator->validated();
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('public/fotos');
-            $data['foto'] = str_replace('public/', '', $path);
+            try {
+                $path = $request->file('foto')->store('public/fotos');
+                $data['foto'] = str_replace('public/', '', $path);
+            } catch (\Exception $e) {
+                // File upload gagal, lewati foto
+                unset($data['foto']);
+            }
         }
         $rumahMakan->update($data);
         return response()->json($rumahMakan);

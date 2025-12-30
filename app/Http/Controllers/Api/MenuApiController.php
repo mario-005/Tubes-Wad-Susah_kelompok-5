@@ -37,8 +37,13 @@ class MenuApiController extends Controller
         }
         $data = $validator->validated();
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/menu_images');
-            $data['image'] = str_replace('public/', '', $path);
+            try {
+                $path = $request->file('image')->store('public/menu_images');
+                $data['image'] = str_replace('public/', '', $path);
+            } catch (\Exception $e) {
+                // File upload gagal, lewati image
+                $data['image'] = null;
+            }
         }
         $menu = Menu::create($data);
         return response()->json($menu, 201);
@@ -78,11 +83,16 @@ class MenuApiController extends Controller
         }
         $data = $validator->validated();
         if ($request->hasFile('image')) {
-            if ($menu->image) {
-                Storage::delete('public/' . $menu->image);
+            try {
+                if ($menu->image) {
+                    Storage::delete('public/' . $menu->image);
+                }
+                $path = $request->file('image')->store('public/menu_images');
+                $data['image'] = str_replace('public/', '', $path);
+            } catch (\Exception $e) {
+                // File upload gagal, lewati image
+                unset($data['image']);
             }
-            $path = $request->file('image')->store('public/menu_images');
-            $data['image'] = str_replace('public/', '', $path);
         }
         $menu->update($data);
         return response()->json($menu);
