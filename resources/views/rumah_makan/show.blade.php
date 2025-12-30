@@ -67,11 +67,7 @@
                 @forelse($rumahMakan->menus as $menu)
                     <div class="col-md-4 mb-4">
                         <div class="card">
-                            @if($menu->image)
-                                <img src="{{ \App\Helpers\ImageHelper::getMenuImage($menu) }}" class="card-img-top" alt="{{ $menu->name }}">
-                            @else
-                                <img src="https://via.placeholder.com/400x300?text=No+Image" class="card-img-top" alt="No Image">
-                            @endif
+                            <img src="{{ \App\Helpers\ImageHelper::getMenuImage($menu) }}" class="card-img-top" alt="{{ $menu->name }}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $menu->name }}</h5>
                                 <p class="card-text">{{ $menu->description }}</p>
