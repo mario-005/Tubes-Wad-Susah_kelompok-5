@@ -11,11 +11,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            @if($rumahMakan->foto)
-                                <img src="{{ \App\Helpers\ImageHelper::getRestaurantImage($rumahMakan) }}" alt="{{ $rumahMakan->nama }}" class="img-fluid rounded">
-                            @else
-                                <img src="https://via.placeholder.com/400x300?text=No+Image" alt="No Image" class="img-fluid rounded">
-                            @endif
+                            <img src="{{ \App\Helpers\ImageHelper::getRestaurantImage($rumahMakan) }}" alt="{{ $rumahMakan->nama }}" class="img-fluid rounded" style="height: 300px; object-fit: cover;">
                         </div>
                         <div class="col-md-8">
                             <h4>Restaurant Information</h4>
