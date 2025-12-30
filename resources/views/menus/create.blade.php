@@ -179,18 +179,35 @@
             <p>{{ $rumahMakan->alamat }}</p>
         </div>
 
+        @if($errors->any())
+        <div class="alert alert-danger" style="background-color: #fee2e2; border: 1px solid #fecaca; color: #dc2626; padding: 12px; border-radius: 12px; margin-bottom: 20px;">
+            <strong>Error:</strong>
+            <ul style="margin: 8px 0 0; padding-left: 20px;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        @if(session('success'))
+        <div class="alert alert-success" style="background-color: #d1fae5; border: 1px solid #a7f3d0; color: #065f46; padding: 12px; border-radius: 12px; margin-bottom: 20px;">
+            {{ session('success') }}
+        </div>
+        @endif
+
         <form action="{{ route('menus.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="rumah_makan_id" value="{{ $rumahMakan->id }}">
 
             <div class="form-group">
                 <label for="name">Nama Menu</label>
-                <input type="text" name="name" id="name" class="form-control" required>
+                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="price">Harga</label>
-                <input type="number" name="price" id="price" class="form-control" required>
+                <input type="number" name="price" id="price" class="form-control" value="{{ old('price') }}" required>
             </div>
 
             <div class="form-group">
@@ -200,14 +217,14 @@
 
             <div class="form-group">
                 <label for="description">Deskripsi</label>
-                <textarea name="description" id="description" class="form-control" required></textarea>
+                <textarea name="description" id="description" class="form-control" required>{{ old('description') }}</textarea>
             </div>
 
             <div class="form-group">
                 <label for="status">Status</label>
                 <select name="status" id="status" class="form-control" required>
-                    <option value="available">Tersedia</option>
-                    <option value="out_of_stock">Habis</option>
+                    <option value="available" {{ old('status') == 'available' ? 'selected' : '' }}>Tersedia</option>
+                    <option value="out_of_stock" {{ old('status') == 'out_of_stock' ? 'selected' : '' }}>Habis</option>
                 </select>
             </div>
 

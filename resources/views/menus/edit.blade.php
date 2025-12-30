@@ -87,6 +87,23 @@
         <div class="container">
             <h1>Edit Menu</h1>
 
+            @if($errors->any())
+            <div class="alert alert-danger" style="background-color: #fee2e2; border: 1px solid #fecaca; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <strong>Error:</strong>
+                <ul style="margin: 8px 0 0; padding-left: 20px;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            @if(session('success'))
+            <div class="alert alert-success" style="background-color: #d1fae5; border: 1px solid #a7f3d0; color: #065f46; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                {{ session('success') }}
+            </div>
+            @endif
+
             <form action="{{ route('menus.update', $menu->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
