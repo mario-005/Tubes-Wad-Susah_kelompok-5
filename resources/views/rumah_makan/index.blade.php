@@ -15,7 +15,7 @@
     <div class="grid">
         @foreach($rumahMakans as $rumahMakan)
         <div class="card">
-            <div class="card-header" style="background-image: url('{{ Storage::url($rumahMakan->foto) }}')"></div>
+            <div class="card-header" style="background-image: url('{{ $rumahMakan->fotoUrl }}')"></div>
             <div class="card-body">
                 <h2 class="title">{{ $rumahMakan->nama }}</h2>
                 <p class="subtitle">{{ $rumahMakan->alamat }}</p>

@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class RumahMakan extends Model
 {
@@ -47,5 +48,20 @@ class RumahMakan extends Model
     public function ulasans()
     {
         return $this->hasMany(Ulasan::class, 'nama_rumah_makan', 'nama');
+    }
+
+    // Helper method to get foto URL
+    public function getFotoUrlAttribute()
+    {
+        if (empty($this->foto)) {
+            return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4';
+        }
+        
+        try {
+            $disk = config('filesystems.default');
+            return Storage::disk($disk)->url($this->foto);
+        } catch (\Exception $e) {
+            return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4';
+        }
     }
 }

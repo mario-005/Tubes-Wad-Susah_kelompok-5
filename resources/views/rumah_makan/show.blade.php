@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             @if($rumahMakan->foto)
-                                <img src="{{ Storage::disk(config('filesystems.default'))->url($rumahMakan->foto) }}" alt="{{ $rumahMakan->nama }}" class="img-fluid rounded">
+                                <img src="{{ $rumahMakan->fotoUrl }}" alt="{{ $rumahMakan->nama }}" class="img-fluid rounded">
                             @else
                                 <img src="https://via.placeholder.com/400x300?text=No+Image" alt="No Image" class="img-fluid rounded">
                             @endif
@@ -68,7 +68,7 @@
                     <div class="col-md-4 mb-4">
                         <div class="card">
                             @if($menu->image)
-                                <img src="{{ Storage::disk(config('filesystems.default'))->url($menu->image) }}" class="card-img-top" alt="{{ $menu->name }}">
+                                <img src="{{ $menu->imageUrl }}" class="card-img-top" alt="{{ $menu->name }}">
                             @else
                                 <img src="https://via.placeholder.com/400x300?text=No+Image" class="card-img-top" alt="No Image">
                             @endif
