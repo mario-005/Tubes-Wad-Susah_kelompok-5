@@ -1,66 +1,199 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Manajemen Rumah Makan - User Manual
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web untuk manajemen rumah makan yang mencakup pengelolaan menu, reservasi ruangan, ulasan, dan status operasional.
+---
 
-## About Laravel
+## Tentang Aplikasi
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem Manajemen Rumah Makan adalah aplikasi berbasis web yang dibangun menggunakan Laravel Framework. Aplikasi ini dirancang untuk memudahkan pengelolaan operasional rumah makan, termasuk manajemen menu, reservasi ruangan, ulasan pelanggan, dan pengaturan jam operasional.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Teknologi yang Digunakan:**
+- **Backend**: Laravel 11.x
+- **Frontend**: Blade Template, Bootstrap 5
+- **Database**: MySQL/PostgreSQL
+- **Authentication**: Laravel Sanctum
+- **Deployment**: Vercel
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Untuk Admin:
+- Manajemen Rumah Makan (CRUD)
+- Manajemen Menu (tambah, edit, hapus menu)
+- Manajemen Ruangan (tambah, edit, hapus ruangan)
+- Manajemen Reservasi (lihat, approve, reject)
+- Manajemen Ulasan (lihat, hapus ulasan)
+- Pengaturan Status Operasional
+- Dashboard Admin dengan statistik
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Untuk User:
+- Registrasi dan Login
+- Melihat Daftar Menu
+- Melakukan Reservasi Ruangan
+- Memberikan Ulasan
+- Melihat Status Operasional Rumah Makan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+### Admin Default
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Setelah menjalankan seeder, Anda dapat login sebagai admin menggunakan kredensial berikut:
 
-### Premium Partners
+```
+Email: admin@example.com
+Password: password
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**PENTING:** Segera ubah password default setelah login pertama kali!
 
-## Contributing
+##  Panduan Penggunaan
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Untuk Admin
 
-## Code of Conduct
+#### 1. Login ke Dashboard Admin
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Akses aplikasi di browser
+2. Klik tombol **Login**
+3. Masukkan email dan password admin
+4. Anda akan diarahkan ke Dashboard Admin
 
-## Security Vulnerabilities
+#### 2. Manajemen Rumah Makan
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Menambah Rumah Makan:**
+1. Dari dashboard, pilih menu **Rumah Makan**
+2. Klik tombol **Tambah Rumah Makan**
+3. Isi form dengan informasi:
+   - Nama Rumah Makan
+   - Alamat
+   - Nomor Telepon
+   - Deskripsi
+   - Upload gambar (opsional)
+4. Klik **Simpan**
 
-## License
+**Edit/Hapus Rumah Makan:**
+- Klik tombol **Edit** untuk mengubah data
+- Klik tombol **Hapus** untuk menghapus (konfirmasi diperlukan)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### 3. Manajemen Menu
+
+**Menambah Menu:**
+1. Pilih menu **Menu**
+2. Klik **Tambah Menu**
+3. Isi form:
+   - Nama Menu
+   - Deskripsi
+   - Harga
+   - Kategori
+   - Rumah Makan (pilih dari dropdown)
+   - Upload gambar menu
+4. Klik **Simpan**
+
+**Edit/Hapus Menu:**
+- Gunakan tombol aksi di tabel daftar menu
+
+#### 4. Manajemen Ruangan
+
+**Menambah Ruangan:**
+1. Pilih menu **Ruangan**
+2. Klik **Tambah Ruangan**
+3. Isi informasi:
+   - Nama Ruangan
+   - Kapasitas
+   - Deskripsi
+   - Rumah Makan
+   - Fasilitas
+4. Klik **Simpan**
+
+#### 5. Manajemen Reservasi
+
+**Melihat Reservasi:**
+1. Pilih menu **Reservasi**
+2. Lihat daftar semua reservasi dengan status
+
+**Approve/Reject Reservasi:**
+1. Klik tombol **Detail** pada reservasi
+2. Pilih **Approve** untuk menyetujui
+3. Pilih **Reject** untuk menolak
+4. Tambahkan catatan jika diperlukan
+
+#### 6. Manajemen Ulasan
+
+**Melihat dan Moderasi Ulasan:**
+1. Pilih menu **Ulasan**
+2. Lihat semua ulasan dari pelanggan
+3. Hapus ulasan yang tidak sesuai dengan tombol **Hapus**
+
+#### 7. Pengaturan Status Operasional
+
+**Mengatur Jam Operasional:**
+1. Pilih menu **Status Operasional**
+2. Pilih rumah makan
+3. Atur untuk setiap hari:
+   - Status (Buka/Tutup)
+   - Jam Buka
+   - Jam Tutup
+4. Klik **Simpan**
+
+---
+
+### Untuk User
+
+#### 1. Registrasi Akun
+
+1. Klik tombol **Register**
+2. Isi form registrasi:
+   - Nama Lengkap
+   - Email
+   - Password
+   - Konfirmasi Password
+3. Klik **Register**
+4. Login dengan kredensial yang telah dibuat
+
+#### 2. Melihat Menu
+
+1. Dari halaman utama, klik **Menu**
+2. Browse menu berdasarkan rumah makan
+3. Lihat detail menu dengan klik gambar atau nama menu
+
+#### 3. Melakukan Reservasi
+
+**Langkah-langkah Reservasi:**
+1. Pilih menu **Reservasi** atau **Ruangan**
+2. Pilih rumah makan
+3. Pilih ruangan yang tersedia
+4. Isi form reservasi:
+   - Tanggal reservasi
+   - Jam mulai
+   - Jam selesai
+   - Jumlah orang
+   - Catatan khusus (opsional)
+5. Klik **Submit Reservasi**
+6. Tunggu konfirmasi dari admin
+
+**Melihat Status Reservasi:**
+1. Login ke akun Anda
+2. Pilih **Reservasi Saya**
+3. Lihat status reservasi (Pending/Approved/Rejected)
+
+#### 4. Memberikan Ulasan
+
+**Cara Memberikan Ulasan:**
+1. Pilih rumah makan yang ingin diulas
+2. Klik **Tulis Ulasan**
+3. Isi form:
+   - Rating (1-5 bintang)
+   - Komentar
+4. Klik **Kirim Ulasan**
+
+**Catatan:** 
+- Ulasan akan langsung tampil setelah dikirim
+- Admin dapat menghapus ulasan yang tidak sesuai
+
+#### 5. Melihat Status Operasional
+
+1. Klik pada rumah makan
+2. Lihat **Status Operasional** di halaman detail
+3. Cek jam buka dan tutup untuk setiap hari
+
+---
